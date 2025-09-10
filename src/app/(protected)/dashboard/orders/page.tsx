@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,6 +10,7 @@ import {
   deleteOrder,
   getOrderStats,
   debugOrderData,
+  getCustomerName,
 } from "../../../../../services/apiOrders";
 import toast from "react-hot-toast";
 
@@ -46,16 +47,12 @@ const OrdersPage: React.FC = () => {
       }),
   });
 
-  console.log("Orders data:", data);
-  console.log("Search query:", searchQuery);
-  console.log("Debounced search query:", debouncedSearchQuery);
-
   const { data: stats } = useQuery({
     queryKey: ["orderStats"],
     queryFn: getOrderStats,
   });
 
-  const orders = data?.orders || [];
+  const orders = useMemo(() => data?.orders || [], [data?.orders]);
   const total = data?.total || 0;
   const totalPages = Math.ceil(total / pageSize);
 
@@ -67,14 +64,31 @@ const OrdersPage: React.FC = () => {
         id,
         status as "pending" | "paid" | "shipped" | "delivered" | "cancelled"
       ),
-    onSuccess: () => {
+    onSuccess: (updatedOrder, variables) => {
+      console.log("Order status updated successfully:", updatedOrder);
       toast.success("تم تحديث حالة الطلب بنجاح");
+
+      // Invalidate all order-related queries
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       queryClient.invalidateQueries({ queryKey: ["orderStats"] });
+      queryClient.invalidateQueries({ queryKey: ["order", variables.id] });
+
+      // Optionally update the cache directly for immediate feedback
+      queryClient.setQueryData(["order", variables.id], updatedOrder);
     },
-    onError: (err) => {
-      toast.error("حدث خطأ أثناء تحديث حالة الطلب");
-      console.error(err);
+    onError: (err: Error) => {
+      console.error("Order update error:", err);
+
+      // Show specific error message based on the error
+      if (err.message.includes("لم يتم العثور على الطلب")) {
+        toast.error("الطلب غير موجود أو تم حذفه");
+      } else if (err.message.includes("الطلب غير موجود")) {
+        toast.error("الطلب المطلوب غير موجود");
+      } else if (err.message.includes("لم يتم تحديث أي طلب")) {
+        toast.error("فشل في تحديث الطلب، يرجى المحاولة مرة أخرى");
+      } else {
+        toast.error(`خطأ في تحديث الطلب: ${err.message}`);
+      }
     },
   });
 
@@ -394,9 +408,7 @@ const OrdersPage: React.FC = () => {
                       <td className="ltr:text-left rtl:text-right whitespace-nowrap px-[20px] py-[15px] border-b border-gray-100 dark:border-[#172036] ltr:first:border-l ltr:last:border-r rtl:first:border-r rtl:last:border-l">
                         <div>
                           <p className="font-medium text-gray-900 dark:text-white">
-                            {order.profiles?.full_name ||
-                              order.user_id ||
-                              "غير محدد"}
+                            {getCustomerName(order)}
                           </p>
                         </div>
                       </td>

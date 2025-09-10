@@ -10,19 +10,24 @@ export interface ProductAttribute {
 
 export interface Product {
   id?: string;
-  name_ar: string;
-  name_en: string;
+  title: string; // Required field
+  name_en?: string;
+  name_ar?: string;
+  price: number; // Required field
+  offer_price?: number;
+  images?: string[]; // text[] in database
+  image_url?: string[]; // text[] in database
   description_ar?: string;
   description_en?: string;
-  price: number;
-  offer_price?: number;
-  stock?: number;
-  image_url?: string[];
   category_id?: string;
-  is_best_seller?: boolean;
-  limited_time_offer?: boolean;
+  stock_quantity?: number; // integer with default 0
+  is_best_seller?: boolean; // boolean with default false
+  limited_time_offer?: boolean; // boolean with default false
   created_at?: string;
   updated_at?: string;
+  // Keep for backward compatibility
+  stock?: number;
+  description?: string;
   attributes?: ProductAttribute[];
 }
 
@@ -42,13 +47,7 @@ export async function getProducts(
 
   let query = supabase.from("products").select(
     `
-      *,
-      attributes:product_attributes(
-        id,
-        product_id,
-        attribute_name,
-        attribute_value
-      )
+      *
     `,
     { count: "exact" }
   );
@@ -141,91 +140,77 @@ export async function getProducts(
 export async function getProductById(id: string): Promise<Product> {
   const { data, error } = await supabase
     .from("products")
-    .select(
-      `
-      *,
-      attributes:product_attributes(
-        id,
-        product_id,
-        attribute_name,
-        attribute_value
-      )
-    `
-    )
+    .select("*")
     .eq("id", id)
     .single();
 
-  if (error) throw error;
-
-  // التأكد من أن الخصائص موجودة وصحيحة
-  let processedAttributes = [];
-
-  if (data.attributes) {
-    if (Array.isArray(data.attributes)) {
-      processedAttributes = data.attributes;
-    } else if (typeof data.attributes === "object") {
-      // إذا كانت الخصائص كائن، نحولها إلى مصفوفة
-      processedAttributes = Object.values(data.attributes);
-    }
+  if (error) {
+    console.error("خطأ في جلب المنتج:", error);
+    throw new Error(`تعذر تحميل المنتج: ${error.message}`);
   }
 
-  // إذا لم تكن هناك خصائص في البيانات، احصل عليها من جدول منفصل
-  if (processedAttributes.length === 0) {
-    const { data: attributesData } = await supabase
-      .from("product_attributes")
-      .select("id, product_id, attribute_name, attribute_value")
-      .eq("product_id", id);
-
-    processedAttributes = attributesData || [];
+  if (!data) {
+    throw new Error("لم يتم العثور على المنتج");
   }
 
-  const product = {
+  // Map database fields to interface for backward compatibility
+  const product: Product = {
     ...data,
-    attributes: processedAttributes,
+    image_url: data.images || data.image_url,
+    stock: data.stock_quantity,
+    description: data.description_ar || data.description_en, // Backward compatibility
+    attributes: [], // No attributes in current schema
   };
 
   return product;
 }
 
 export async function createProduct(productData: Product): Promise<Product> {
-  const { attributes, ...product } = productData;
+  const { ...productInput } = productData;
+
+  // Generate a unique ID since database expects text not null
+  const generateProductId = () => {
+    return `prod_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  };
+
+  // Map the product data to match database schema exactly
+  const dbProduct = {
+    id: productInput.id || generateProductId(), // Generate ID if not provided
+    title: productInput.title,
+    name_en: productInput.name_en || null,
+    name_ar: productInput.name_ar || null,
+    price: Number(productInput.price), // Ensure it's a number
+    offer_price: productInput.offer_price
+      ? Number(productInput.offer_price)
+      : null,
+    images: productInput.images || productInput.image_url || null,
+    image_url: productInput.image_url || productInput.images || null,
+    description_ar:
+      productInput.description_ar || productInput.description || null,
+    description_en: productInput.description_en || null,
+    category_id: productInput.category_id || null,
+    stock_quantity: productInput.stock_quantity || productInput.stock || 0,
+    is_best_seller: productInput.is_best_seller ?? false,
+    limited_time_offer: productInput.limited_time_offer ?? false,
+  };
 
   // Create the product first
   const { data: createdProduct, error: productError } = await supabase
     .from("products")
-    .insert([product])
+    .insert([dbProduct])
     .select()
     .single();
 
   if (productError) {
     console.error("خطأ في إنشاء المنتج:", productError);
-    throw new Error("تعذر إنشاء المنتج");
+    console.error("Product data sent:", dbProduct);
+    console.error("Original input data:", productInput);
+    throw new Error(`تعذر إنشاء المنتج: ${productError.message}`);
   }
 
-  // If there are attributes, create them
-  if (attributes && attributes.length > 0) {
-    const attributesWithProductId = attributes.map((attr) => ({
-      attribute_name: attr.attribute_name,
-      attribute_value: attr.attribute_value,
-      product_id: createdProduct.id,
-    }));
+  console.log("Product created successfully:", createdProduct);
 
-    const { error: attributesError } = await supabase
-      .from("product_attributes")
-      .insert(attributesWithProductId);
-
-    if (attributesError) {
-      console.error("خطأ في إنشاء خصائص المنتج:", attributesError);
-    }
-  }
-
-  // إرجاع المنتج مع الخصائص
-  const finalProduct = {
-    ...createdProduct,
-    attributes: attributes || [],
-  };
-
-  return finalProduct;
+  return createdProduct;
 }
 
 export async function uploadProductImage(
@@ -318,12 +303,18 @@ export async function updateProduct(
   id: string,
   updatedProduct: Partial<Product>
 ) {
-  const { attributes, ...product } = updatedProduct;
+  const { stock, ...product } = updatedProduct;
+
+  // Map stock to stock_quantity for database compatibility
+  const dbProduct = {
+    ...product,
+    stock_quantity: product.stock_quantity || stock || 0,
+  };
 
   // Update the product
   const { data, error } = await supabase
     .from("products")
-    .update(product)
+    .update(dbProduct)
     .eq("id", id)
     .select()
     .single();
@@ -333,55 +324,5 @@ export async function updateProduct(
     throw new Error("تعذر تحديث المنتج");
   }
 
-  // If there are attributes to update, handle them
-  if (attributes !== undefined) {
-    // Delete existing attributes
-    const { error: deleteError } = await supabase
-      .from("product_attributes")
-      .delete()
-      .eq("product_id", id);
-
-    if (deleteError) {
-      console.error("خطأ في حذف الخصائص القديمة:", deleteError);
-    }
-
-    // Insert new attributes
-    if (attributes && attributes.length > 0) {
-      const attributesWithProductId = attributes.map((attr) => ({
-        attribute_name: attr.attribute_name || "",
-        attribute_value: attr.attribute_value || "",
-        product_id: id,
-      }));
-
-      const { error: attributesError } = await supabase
-        .from("product_attributes")
-        .insert(attributesWithProductId);
-
-      if (attributesError) {
-        console.error("خطأ في تحديث خصائص المنتج:", attributesError);
-      }
-    }
-  }
-
-  // إرجاع المنتج مع الخصائص المحدثة
-  let finalAttributes = [];
-
-  if (attributes !== undefined) {
-    finalAttributes = attributes;
-  } else {
-    // إذا لم يتم تمرير خصائص، احصل على الخصائص الحالية من قاعدة البيانات
-    const { data: currentAttributes } = await supabase
-      .from("product_attributes")
-      .select("id, product_id, attribute_name, attribute_value")
-      .eq("product_id", id);
-
-    finalAttributes = currentAttributes || [];
-  }
-
-  const finalProduct = {
-    ...data,
-    attributes: finalAttributes,
-  };
-
-  return finalProduct;
+  return data;
 }

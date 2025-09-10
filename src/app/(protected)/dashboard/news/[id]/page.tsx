@@ -27,7 +27,6 @@ import {
   updateProduct,
   uploadProductImage,
   Product,
-  ProductAttribute,
 } from "../../../../../../services/apiProducts";
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -42,7 +41,7 @@ interface ProductFormData {
   description_en: string;
   price: number;
   offer_price?: number;
-  stock: number;
+  stock_quantity: number;
   is_best_seller: boolean;
   limited_time_offer: boolean;
   image_url?: string[];
@@ -53,7 +52,6 @@ export default function EditProductPage() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [attributes, setAttributes] = useState<ProductAttribute[]>([]);
   const router = useRouter();
 
   const { register, handleSubmit, reset, control } = useForm({
@@ -65,7 +63,7 @@ export default function EditProductPage() {
       description_en: "",
       price: 0,
       offer_price: 0,
-      stock: 0,
+      stock_quantity: 0,
       is_best_seller: false,
       limited_time_offer: false,
     },
@@ -97,26 +95,13 @@ export default function EditProductPage() {
         description_en: product.description_en || "",
         price: product.price || 0,
         offer_price: product.offer_price || 0,
-        stock: product.stock || 0,
+        stock_quantity: product.stock_quantity || product.stock || 0,
         is_best_seller: product.is_best_seller || false,
         limited_time_offer: product.limited_time_offer || false,
       });
 
       if (product.image_url) {
         setServerImages(product.image_url);
-      }
-
-      // تحسين تحميل الخصائص
-      if (product.attributes && Array.isArray(product.attributes)) {
-        setAttributes(product.attributes);
-      } else if (product.attributes && typeof product.attributes === "object") {
-        // إذا كانت الخصائص كائن وليس مصفوفة، نحولها إلى مصفوفة
-        const attributesArray = Object.values(
-          product.attributes
-        ) as ProductAttribute[];
-        setAttributes(attributesArray);
-      } else {
-        setAttributes([]);
       }
     }
   }, [product, reset]);
@@ -125,32 +110,6 @@ export default function EditProductPage() {
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
     setSelectedImage(file);
-  };
-
-  // Attributes management functions
-  const addAttribute = () => {
-    const newAttribute: ProductAttribute = {
-      attribute_name: "",
-      attribute_value: "",
-    };
-    setAttributes([...(attributes || []), newAttribute]);
-  };
-
-  const removeAttribute = (index: number) => {
-    if (!attributes) return;
-    setAttributes(attributes.filter((_, i) => i !== index));
-  };
-
-  const updateAttribute = (
-    index: number,
-    field: keyof ProductAttribute,
-    value: string
-  ) => {
-    if (!attributes) return;
-
-    const updatedAttributes = [...attributes];
-    updatedAttributes[index] = { ...updatedAttributes[index], [field]: value };
-    setAttributes(updatedAttributes);
   };
 
   const queryClient = useQueryClient();
@@ -171,7 +130,6 @@ export default function EditProductPage() {
       const updatedData: Partial<Product> = {
         ...data,
         image_url: uploadedImageUrl ? [uploadedImageUrl] : serverImages,
-        attributes: attributes || [],
       };
 
       // تنفيذ التحديث في Supabase
@@ -277,7 +235,7 @@ export default function EditProductPage() {
                   <label className="block font-medium mb-2">المخزون</label>
                   <input
                     type="number"
-                    {...register("stock")}
+                    {...register("stock_quantity")}
                     className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
                   />
                 </div>
@@ -510,98 +468,6 @@ export default function EditProductPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Attributes Section */}
-        <div className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md">
-          <div className="trezo-card-header mb-[20px] md:mb-[25px] flex items-center justify-between">
-            <div className="trezo-card-title">
-              <h5 className="!mb-0">خصائص المنتج</h5>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                ({attributes ? attributes.length : 0} خاصية)
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={addAttribute}
-              className="font-medium inline-block transition-all rounded-md md:text-md py-[8px] px-[16px] bg-primary-500 text-white hover:bg-primary-400"
-            >
-              <i className="material-symbols-outlined ltr:mr-2 rtl:ml-2">add</i>
-              إضافة خاصية
-            </button>
-          </div>
-
-          <div className="trezo-card-content">
-            {!attributes || attributes.length === 0 ? (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-8">
-                لا توجد خصائص للمنتج. اضغط على &quot;إضافة خاصية&quot; لإضافة
-                خاصية جديدة.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {attributes &&
-                  attributes.map((attribute, index) => (
-                    <div
-                      key={index}
-                      className="border border-gray-200 dark:border-[#172036] rounded-md p-4"
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <h6 className="text-black dark:text-white font-medium">
-                          خاصية {index + 1}
-                        </h6>
-                        <button
-                          type="button"
-                          onClick={() => removeAttribute(index)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          <i className="material-symbols-outlined">delete</i>
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="mb-[10px] text-black dark:text-white font-medium block">
-                            اسم الخاصية
-                          </label>
-                          <input
-                            type="text"
-                            className="h-[45px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                            placeholder="مثل: اللون، الحجم، المادة"
-                            value={attribute?.attribute_name || ""}
-                            onChange={(e) =>
-                              updateAttribute(
-                                index,
-                                "attribute_name",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-
-                        <div>
-                          <label className="mb-[10px] text-black dark:text-white font-medium block">
-                            قيمة الخاصية
-                          </label>
-                          <input
-                            type="text"
-                            className="h-[45px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                            placeholder="مثل: أحمر، كبير، قطن"
-                            value={attribute?.attribute_value || ""}
-                            onChange={(e) =>
-                              updateAttribute(
-                                index,
-                                "attribute_value",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            )}
           </div>
         </div>
       </div>

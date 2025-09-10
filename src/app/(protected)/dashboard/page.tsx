@@ -6,9 +6,10 @@ import {
   getOrders,
   getOrderStats,
   Order,
+  getCustomerName,
+  getCustomerPhone,
 } from "../../../../services/apiOrders";
 import { getProducts } from "../../../../services/apiProducts";
-import { getUsers, getUserStats, User } from "../../../../services/apiUsers";
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
 
@@ -18,7 +19,6 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 interface DashboardStats {
   totalOrders: number;
   totalSales: number;
-  totalUsers: number;
   totalProducts: number;
   pendingOrders: number;
   completedOrders: number;
@@ -29,7 +29,6 @@ interface DashboardStats {
 interface ChartData {
   salesData: number[];
   ordersData: number[];
-  usersData: number[];
   labels: string[];
 }
 
@@ -37,7 +36,6 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats>({
     totalOrders: 0,
     totalSales: 0,
-    totalUsers: 0,
     totalProducts: 0,
     pendingOrders: 0,
     completedOrders: 0,
@@ -47,7 +45,6 @@ export default function DashboardPage() {
   const [chartData, setChartData] = useState<ChartData>({
     salesData: [],
     ordersData: [],
-    usersData: [],
     labels: [],
   });
   const [recentOrders, setRecentOrders] = useState<Order[]>([]);
@@ -64,14 +61,11 @@ export default function DashboardPage() {
         setIsLoading(true);
 
         // Fetch all data in parallel
-        const [orderStats, orders, products, userStats, users] =
-          await Promise.all([
-            getOrderStats(),
-            getOrders(1, 1000), // Get more orders for better analytics
-            getProducts(1, 1000),
-            getUserStats(),
-            getUsers(1, 1000),
-          ]);
+        const [orderStats, orders, products] = await Promise.all([
+          getOrderStats(),
+          getOrders(1, 1000), // Get more orders for better analytics
+          getProducts(1, 1000),
+        ]);
 
         // Calculate total sales from orders
         const totalSales = orders.orders.reduce(
@@ -104,16 +98,9 @@ export default function DashboardPage() {
           ).length;
         });
 
-        const usersData = last7Days.map((date) => {
-          return users.users.filter((user: User) =>
-            user.created_at?.startsWith(date)
-          ).length;
-        });
-
         const finalStats = {
           totalOrders: orderStats.total,
           totalSales,
-          totalUsers: userStats.total,
           totalProducts: products.total,
           pendingOrders: orderStats.pending,
           completedOrders: orderStats.delivered,
@@ -121,12 +108,17 @@ export default function DashboardPage() {
           averageOrderValue,
         };
 
+        console.log("Dashboard Data:", {
+          orderStats,
+          orders,
+          products,
+          finalStats,
+        });
         setStats(finalStats);
 
         setChartData({
           salesData,
           ordersData,
-          usersData,
           labels: last7Days.map((date) =>
             new Date(date).toLocaleDateString("ar-EG", {
               month: "short",
@@ -213,46 +205,6 @@ export default function DashboardPage() {
       enabled: false,
     },
     colors: ["#3B82F6"],
-    xaxis: {
-      categories: chartData.labels,
-      labels: {
-        style: {
-          colors: "#64748B",
-          fontFamily: "inherit",
-        },
-      },
-    },
-    yaxis: {
-      labels: {
-        style: {
-          colors: "#64748B",
-          fontFamily: "inherit",
-        },
-      },
-    },
-    tooltip: {
-      theme: "dark",
-    },
-    grid: {
-      borderColor: "#e2e8f0",
-    },
-  };
-
-  const usersChartOptions: ApexOptions = {
-    chart: {
-      type: "line",
-      toolbar: {
-        show: false,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-      width: 3,
-    },
-    colors: ["#F59E0B"],
     xaxis: {
       categories: chartData.labels,
       labels: {
@@ -423,7 +375,7 @@ export default function DashboardPage() {
                   className="text-3xl font-bold text-blue-800 dark:text-blue-100"
                   aria-label={`إجمالي الطلبات: ${stats.totalOrders}`}
                 >
-                  {stats.totalOrders}
+                  {stats.totalOrders || 0}
                 </p>
               </div>
             </div>
@@ -461,41 +413,6 @@ export default function DashboardPage() {
                   )} دولار`}
                 >
                   ${stats.totalSales.toFixed(2)}
-                </p>
-              </div>
-            </div>
-          </article>
-
-          <article className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-xl p-6 shadow-lg border border-purple-200 dark:border-purple-700 hover:shadow-xl transition-all duration-300">
-            <p className="text-sm font-medium text-purple-600 dark:text-purple-300 mb-1">
-              إجمالي المستخدمين
-            </p>
-            <div className="flex items-center gap-8 ">
-              <div
-                className="p-3 bg-purple-500 rounded-xl shadow-md"
-                aria-hidden="true"
-              >
-                <svg
-                  className="w-7 h-7 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-              </div>
-              <div className="text-right">
-                <p
-                  className="text-3xl font-bold text-purple-800 dark:text-purple-100"
-                  aria-label={`إجمالي المستخدمين: ${stats.totalUsers}`}
-                >
-                  {stats.totalUsers}
                 </p>
               </div>
             </div>
@@ -539,7 +456,7 @@ export default function DashboardPage() {
 
         {/* Charts Section */}
         <section
-          className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6"
           aria-label="الرسوم البيانية"
         >
           <article className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
@@ -568,22 +485,6 @@ export default function DashboardPage() {
                   options={ordersChartOptions}
                   series={[{ name: "الطلبات", data: chartData.ordersData }]}
                   type="bar"
-                  height={250}
-                />
-              </div>
-            )}
-          </article>
-
-          <article className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 text-right">
-              المستخدمين الجدد
-            </h2>
-            {isChartLoaded && (
-              <div role="img" aria-label="رسم بياني للمستخدمين الجدد">
-                <Chart
-                  options={usersChartOptions}
-                  series={[{ name: "المستخدمين", data: chartData.usersData }]}
-                  type="line"
                   height={250}
                 />
               </div>
@@ -671,7 +572,7 @@ export default function DashboardPage() {
               role="list"
               aria-label="قائمة آخر الطلبات"
             >
-              {recentOrders.map((order) => (
+              {recentOrders.slice(0, 2).map((order) => (
                 <div
                   key={order.id}
                   className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 rounded-xl border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-200"
@@ -679,13 +580,21 @@ export default function DashboardPage() {
                 >
                   <div className="text-right">
                     <p className="font-medium text-gray-900 dark:text-white">
-                      {order.profiles?.full_name || order.user_id}
+                      {getCustomerName(order)}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {order.created_at
                         ? new Date(order.created_at).toLocaleDateString("ar-EG")
                         : "غير محدد"}
                     </p>
+                    {/* Show customer type and phone if available */}
+                    <div className="flex gap-2 mt-1">
+                      {getCustomerPhone(order) && (
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          📞 {getCustomerPhone(order)}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="text-left">
                     <p className="font-semibold text-gray-900 dark:text-white">

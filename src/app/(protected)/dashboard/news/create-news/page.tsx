@@ -27,7 +27,6 @@ import {
   createProduct,
   uploadProductImage,
   Product,
-  ProductAttribute,
 } from "../../../../../../services/apiProducts";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -37,14 +36,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 type ProductFormValues = {
-  name_ar: string;
-  name_en: string;
+  title: string; // Required field
+  name_ar?: string;
+  name_en?: string;
   category_id: UUID;
   description_ar: string;
-  description_en: string;
+  description_en?: string;
   price: number;
   offer_price?: number;
-  stock: number;
+  stock_quantity: number;
   is_best_seller: boolean;
   limited_time_offer: boolean;
   images: File[];
@@ -66,16 +66,18 @@ const CreateProductForm: React.FC = () => {
   const { register, handleSubmit, setValue, formState } =
     useForm<ProductFormValues>({
       defaultValues: {
+        title: "",
+        name_ar: "",
+        name_en: "",
+        description_ar: "",
+        description_en: "",
         price: 0,
-        stock: 0,
+        stock_quantity: 0,
         is_best_seller: false,
         limited_time_offer: false,
         images: [],
       },
     });
-
-  // Attributes management
-  const [attributes, setAttributes] = useState<ProductAttribute[]>([]);
 
   const { errors } = formState;
 
@@ -145,30 +147,13 @@ const CreateProductForm: React.FC = () => {
     setValue("images", []);
   };
 
-  // Attributes management functions
-  const addAttribute = () => {
-    const newAttribute: ProductAttribute = {
-      attribute_name: "",
-      attribute_value: "",
-    };
-    setAttributes([...attributes, newAttribute]);
-  };
-
-  const removeAttribute = (index: number) => {
-    setAttributes(attributes.filter((_, i) => i !== index));
-  };
-
-  const updateAttribute = (
-    index: number,
-    field: keyof ProductAttribute,
-    value: string
-  ) => {
-    const updatedAttributes = [...attributes];
-    updatedAttributes[index] = { ...updatedAttributes[index], [field]: value };
-    setAttributes(updatedAttributes);
-  };
-
   const onSubmit = async (data: ProductFormValues) => {
+    // تحقق من وجود title (مطلوب)
+    if (!data.title || data.title.trim() === "") {
+      toast.error("يجب إدخال عنوان المنتج");
+      return;
+    }
+
     // تحقق أن category_id موجود وصحيح
     if (!data.category_id || data.category_id.trim() === "") {
       toast.error("الرجاء اختيار التصنيف");
@@ -191,21 +176,27 @@ const CreateProductForm: React.FC = () => {
       const uploadedImageUrls = await Promise.all(uploadPromises);
 
       const finalData: Product = {
+        title: data.title || data.name_ar || data.name_en || "منتج جديد",
         name_ar: data.name_ar,
         name_en: data.name_en,
-        description_ar: data.description_ar,
-        description_en: data.description_en,
+        description_ar:
+          editorAr && editorAr !== "اكتب وصف المنتج بالعربية..."
+            ? editorAr
+            : data.description_ar || undefined,
+        description_en:
+          editorEn && editorEn !== "Write the product description in English..."
+            ? editorEn
+            : data.description_en || undefined,
         category_id: data.category_id,
-        price: data.price,
+        price: Number(data.price), // Convert to number
         offer_price:
-          data.offer_price && data.offer_price > 0
-            ? data.offer_price
+          data.offer_price && Number(data.offer_price) > 0
+            ? Number(data.offer_price)
             : undefined,
-        stock: data.stock,
+        stock_quantity: Number(data.stock_quantity), // Convert to number
         is_best_seller: data.is_best_seller,
         limited_time_offer: data.limited_time_offer,
-        image_url: uploadedImageUrls,
-        attributes: attributes,
+        images: uploadedImageUrls,
       };
 
       mutate(finalData);
@@ -253,6 +244,31 @@ const CreateProductForm: React.FC = () => {
               </div>
 
               <div className="trezo-card-content">
+                {/* Title Field - Required */}
+                <div className="mb-[25px]">
+                  <label className="mb-[10px] text-black dark:text-white font-medium block">
+                    عنوان المنتج الرئيسي <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
+                    placeholder="عنوان المنتج الرئيسي (مطلوب)"
+                    id="title"
+                    {...register("title", {
+                      required: "يجب إدخال عنوان المنتج",
+                      maxLength: {
+                        value: 200,
+                        message: "يجب ألا يزيد العنوان عن 200 حرف",
+                      },
+                    })}
+                  />
+                  {errors?.title?.message && (
+                    <span className="text-red-700 text-sm">
+                      {errors.title.message}
+                    </span>
+                  )}
+                </div>
+
                 <div className="sm:grid sm:grid-cols-2 sm:gap-[25px]">
                   <div className="mb-[20px] sm:mb-0">
                     <label className="mb-[10px] text-black dark:text-white font-medium block">
@@ -264,10 +280,9 @@ const CreateProductForm: React.FC = () => {
                       placeholder="يجب الايزيد عن 100 حرف"
                       id="name_ar"
                       {...register("name_ar", {
-                        required: "يجب ادخال اسم المنتج",
-                        max: {
+                        maxLength: {
                           value: 100,
-                          message: "يجب الايزيد عن 100 حرف",
+                          message: "يجب ألا يزيد عن 100 حرف",
                         },
                       })}
                     />
@@ -386,8 +401,8 @@ const CreateProductForm: React.FC = () => {
                       type="number"
                       className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
                       placeholder="0"
-                      id="stock"
-                      {...register("stock", {
+                      id="stock_quantity"
+                      {...register("stock_quantity", {
                         required: "يجب ادخال المخزون",
                         min: {
                           value: 0,
@@ -395,9 +410,9 @@ const CreateProductForm: React.FC = () => {
                         },
                       })}
                     />
-                    {errors?.stock?.message && (
+                    {errors?.stock_quantity?.message && (
                       <span className="text-red-700 text-sm">
-                        {errors.stock.message}
+                        {errors.stock_quantity.message}
                       </span>
                     )}
                   </div>
@@ -609,94 +624,6 @@ const CreateProductForm: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Attributes Section */}
-        <div className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md">
-          <div className="trezo-card-header mb-[20px] md:mb-[25px] flex items-center justify-between">
-            <div className="trezo-card-title">
-              <h5 className="!mb-0">خصائص المنتج</h5>
-            </div>
-            <button
-              type="button"
-              onClick={addAttribute}
-              className="font-medium inline-block transition-all rounded-md md:text-md py-[8px] px-[16px] bg-primary-500 text-white hover:bg-primary-400"
-            >
-              <i className="material-symbols-outlined ltr:mr-2 rtl:ml-2">add</i>
-              إضافة خاصية
-            </button>
-          </div>
-
-          <div className="trezo-card-content">
-            {attributes.length === 0 ? (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-8">
-                لا توجد خصائص للمنتج. اضغط على &quot;إضافة خاصية&quot; لإضافة
-                خاصية جديدة.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {attributes.map((attribute, index) => (
-                  <div
-                    key={index}
-                    className="border border-gray-200 dark:border-[#172036] rounded-md p-4"
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <h6 className="text-black dark:text-white font-medium">
-                        خاصية {index + 1}
-                      </h6>
-                      <button
-                        type="button"
-                        onClick={() => removeAttribute(index)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <i className="material-symbols-outlined">delete</i>
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="mb-[10px] text-black dark:text-white font-medium block">
-                          اسم الخاصية
-                        </label>
-                        <input
-                          type="text"
-                          className="h-[45px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                          placeholder="مثل: اللون، الحجم، المادة"
-                          value={attribute.attribute_name}
-                          onChange={(e) =>
-                            updateAttribute(
-                              index,
-                              "attribute_name",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-
-                      <div>
-                        <label className="mb-[10px] text-black dark:text-white font-medium block">
-                          قيمة الخاصية
-                        </label>
-                        <input
-                          type="text"
-                          className="h-[45px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                          placeholder="مثل: أحمر، كبير، قطن"
-                          value={attribute.attribute_value}
-                          onChange={(e) =>
-                            updateAttribute(
-                              index,
-                              "attribute_value",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 

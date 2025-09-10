@@ -26,22 +26,37 @@ const OrderDetailsPage: React.FC = () => {
     enabled: !!orderId,
   });
 
-  console.log("Order details page - order data:", order);
-
   const { mutate: updateStatus } = useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       updateOrderStatus(
         id,
         status as "pending" | "paid" | "shipped" | "delivered" | "cancelled"
       ),
-    onSuccess: () => {
+    onSuccess: (updatedOrder) => {
+      console.log("Order status updated successfully:", updatedOrder);
       toast.success("تم تحديث حالة الطلب بنجاح");
+
+      // Invalidate and update cache for immediate feedback
       queryClient.invalidateQueries({ queryKey: ["order", orderId] });
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["orderStats"] });
+
+      // Update the cache directly for immediate UI feedback
+      queryClient.setQueryData(["order", orderId], updatedOrder);
     },
-    onError: (err) => {
-      toast.error("حدث خطأ أثناء تحديث حالة الطلب");
-      console.error(err);
+    onError: (err: Error) => {
+      console.error("Order update error:", err);
+
+      // Show specific error message based on the error
+      if (err.message.includes("لم يتم العثور على الطلب")) {
+        toast.error("الطلب غير موجود أو تم حذفه");
+      } else if (err.message.includes("الطلب غير موجود")) {
+        toast.error("الطلب المطلوب غير موجود");
+      } else if (err.message.includes("لم يتم تحديث أي طلب")) {
+        toast.error("فشل في تحديث الطلب، يرجى المحاولة مرة أخرى");
+      } else {
+        toast.error(`خطأ في تحديث الطلب: ${err.message}`);
+      }
     },
   });
 
@@ -192,54 +207,6 @@ const OrderDetailsPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Payment Status Summary */}
-              {order.payments && order.payments.length > 0 && (
-                <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <div>
-                    <h4 className="font-medium text-blue-900 dark:text-blue-100">
-                      حالة الدفع
-                    </h4>
-                    <p className="text-sm text-blue-700 dark:text-blue-300">
-                      ملخص حالات الدفع
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {(() => {
-                      const completedPayments = order.payments.filter(
-                        (p) => p.payment_status === "completed"
-                      );
-                      const pendingPayments = order.payments.filter(
-                        (p) => p.payment_status === "pending"
-                      );
-                      const failedPayments = order.payments.filter(
-                        (p) => p.payment_status === "failed"
-                      );
-
-                      if (completedPayments.length > 0) {
-                        return (
-                          <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                            تم الدفع ({completedPayments.length})
-                          </span>
-                        );
-                      } else if (pendingPayments.length > 0) {
-                        return (
-                          <span className="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                            في انتظار الدفع ({pendingPayments.length})
-                          </span>
-                        );
-                      } else if (failedPayments.length > 0) {
-                        return (
-                          <span className="px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-                            فشل في الدفع ({failedPayments.length})
-                          </span>
-                        );
-                      }
-                      return null;
-                    })()}
-                  </div>
-                </div>
-              )}
-
               {/* Order Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -296,7 +263,6 @@ const OrderDetailsPage: React.FC = () => {
                   </p>
                 </div>
               </div>
-
               {/* Order Details Section */}
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <h4 className="font-medium text-gray-900 dark:text-white mb-4">
@@ -308,7 +274,12 @@ const OrderDetailsPage: React.FC = () => {
                       صاحب الطلب:
                     </span>
                     <span className="font-medium text-gray-900 dark:text-white">
-                      {order.profiles?.full_name || order.user_id || "غير محدد"}
+                      {/* Show guest customer name */}
+                      {order.customer_first_name && order.customer_last_name
+                        ? `${order.customer_first_name} ${order.customer_last_name}`
+                        : order.customer_first_name ||
+                          order.customer_last_name ||
+                          "غير محدد"}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
@@ -316,15 +287,17 @@ const OrderDetailsPage: React.FC = () => {
                       رقم الهاتف:
                     </span>
                     <span className="font-medium text-gray-900 dark:text-white">
-                      {order.profiles?.phone || "غير محدد"}
+                      {order.customer_phone ||
+                        order.profiles?.phone ||
+                        "غير محدد"}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
                     <span className="text-gray-600 dark:text-gray-400">
-                      رقم الهاتف:
+                      البريد الإلكتروني:
                     </span>
                     <span className="font-medium text-gray-900 dark:text-white">
-                      {order.profiles?.phone || "غير محدد"}
+                      {order.customer_email || "غير محدد"}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
@@ -332,7 +305,15 @@ const OrderDetailsPage: React.FC = () => {
                       المدينة:
                     </span>
                     <span className="font-medium text-gray-900 dark:text-white">
-                      {order.profiles?.city || "غير محدد"}
+                      {order.customer_city || "غير محدد"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      المنطقة/المحافظة:
+                    </span>
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      {order.customer_state || "غير محدد"}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2">
@@ -345,7 +326,6 @@ const OrderDetailsPage: React.FC = () => {
                   </div>
                 </div>
               </div>
-
               {/* Order Items */}
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <h4 className="font-medium text-gray-900 dark:text-white mb-4">
@@ -442,7 +422,6 @@ const OrderDetailsPage: React.FC = () => {
                   )}
                 </div>
               </div>
-
               {/* Payment Information */}
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <h4 className="font-medium text-gray-900 dark:text-white mb-4">
@@ -561,7 +540,6 @@ const OrderDetailsPage: React.FC = () => {
                   )}
                 </div>
               </div>
-
               {/* Order Timeline */}
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <h4 className="font-medium text-gray-900 dark:text-white mb-4">
@@ -661,59 +639,136 @@ const OrderDetailsPage: React.FC = () => {
             </div>
 
             <div className="space-y-4">
+              {/* Customer Name */}
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <h4 className="font-medium text-gray-900 dark:text-white mb-2">
                   اسم العميل
                 </h4>
                 <p className="text-gray-600 dark:text-gray-400">
-                  {order.profiles?.full_name || order.user_id || "غير محدد"}
+                  {/* Display customer name from guest checkout fields */}
+                  {order.customer_first_name && order.customer_last_name
+                    ? `${order.customer_first_name} ${order.customer_last_name}`
+                    : order.customer_first_name ||
+                      order.customer_last_name ||
+                      "غير محدد"}
                 </p>
               </div>
 
+              {/* Phone Number */}
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <h4 className="font-medium text-gray-900 dark:text-white mb-2">
                   رقم الهاتف
                 </h4>
                 <p className="text-gray-600 dark:text-gray-400">
-                  {order.profiles?.phone || "غير محدد"}
+                  {order.customer_phone || "غير محدد"}
                 </p>
+                {/* Make phone clickable if available */}
+                {order.customer_phone && (
+                  <div className="mt-2 flex gap-2">
+                    <a
+                      href={`tel:${order.customer_phone}`}
+                      className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+                    >
+                      📞 اتصال
+                    </a>
+                    <a
+                      href={`https://wa.me/${order.customer_phone?.replace(
+                        /\D/g,
+                        ""
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+                    >
+                      💬 واتساب
+                    </a>
+                  </div>
+                )}
               </div>
 
+              {/* Email */}
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                  المدينة
+                  البريد الإلكتروني
                 </h4>
                 <p className="text-gray-600 dark:text-gray-400">
-                  {order.profiles?.city || "غير محدد"}
+                  {order.customer_email || "غير محدد"}
                 </p>
+                {order.customer_email && (
+                  <div className="mt-2">
+                    <a
+                      href={`mailto:${order.customer_email}`}
+                      className="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                    >
+                      ✉️ إرسال إيميل
+                    </a>
+                  </div>
+                )}
               </div>
 
+              {/* Shipping Address - Enhanced for guest checkout */}
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                  العنوان
+                  عنوان الشحن
                 </h4>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {order.profiles?.address || "غير محدد"}
-                </p>
+                <div className="text-gray-600 dark:text-gray-400">
+                  {/* Street Address */}
+                  {order.customer_street_address && (
+                    <p className="mb-1">📍 {order.customer_street_address}</p>
+                  )}
+                  {/* City */}
+                  {order.customer_city && (
+                    <p className="mb-1">🏙️ {order.customer_city}</p>
+                  )}
+                  {/* State */}
+                  {order.customer_state && (
+                    <p className="mb-1">🗺️ {order.customer_state}</p>
+                  )}
+                  {/* Postal Code */}
+                  {order.customer_postcode && (
+                    <p className="mb-1">📮 {order.customer_postcode}</p>
+                  )}
+
+                  {/* Copy address button */}
+                  {order.customer_street_address && (
+                    <button
+                      onClick={() => {
+                        const fullAddress = [
+                          order.customer_street_address,
+                          order.customer_city,
+                          order.customer_state,
+                          order.customer_postcode,
+                        ]
+                          .filter(Boolean)
+                          .join(", ");
+
+                        navigator.clipboard.writeText(fullAddress);
+                        // You might want to show a toast notification here
+                      }}
+                      className="mt-2 inline-flex items-center px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      📋 نسخ العنوان
+                    </button>
+                  )}
+
+                  {/* Show "غير محدد" only if no address information is available */}
+                  {!order.customer_street_address && !order.customer_city && (
+                    <p>غير محدد</p>
+                  )}
+                </div>
               </div>
 
-              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                  الدولة
-                </h4>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {order.profiles?.country || "غير محدد"}
-                </p>
-              </div>
-
-              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                  الرمز البريدي
-                </h4>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {order.profiles?.postal_code || "غير محدد"}
-                </p>
-              </div>
+              {/* Order Notes - New field for guest checkout */}
+              {order.order_notes && (
+                <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                  <h4 className="font-medium text-yellow-900 dark:text-yellow-200 mb-2">
+                    ملاحظات الطلب
+                  </h4>
+                  <p className="text-yellow-800 dark:text-yellow-300 text-sm">
+                    💬 {order.order_notes}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -737,15 +792,6 @@ const OrderDetailsPage: React.FC = () => {
                       {order.payments
                         .reduce((sum, payment) => sum + payment.amount, 0)
                         .toFixed(2)}
-                    </p>
-                  </div>
-
-                  <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                      عدد المعاملات
-                    </h4>
-                    <p className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-                      {order.payments.length}
                     </p>
                   </div>
 
