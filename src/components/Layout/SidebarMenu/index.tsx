@@ -136,6 +136,119 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ toggleActive }) => {
               قائمة الطلبات
             </Link>
 
+            <div className="accordion-item rounded-md text-black dark:text-white mb-[5px] whitespace-nowrap">
+              <button
+                className={`accordion-button toggle flex items-center transition-all py-[9px] ltr:pl-[14px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] rounded-md font-medium w-full relative hover:bg-gray-50 text-left dark:hover:bg-[#15203c] ${
+                  openIndex === 2 ? "open" : ""
+                }`}
+                type="button"
+                onClick={() => toggleAccordion(2)}
+              >
+                <i className="material-symbols-outlined transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px">
+                  auto_stories
+                </i>
+                <span className="title leading-none">مقالات</span>
+              </button>
+
+              <div className="pt-[4px]">
+                <ul className="sidebar-sub-menu">
+                  <div
+                    className={`accordion-collapse ${
+                      openIndex === 2 ? "open" : "hidden"
+                    }`}
+                  >
+                    <li className="sidemenu-item mb-[4px] last:mb-0">
+                      <Link
+                        href="/dashboard/blog"
+                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
+                          pathname === "/dashboard/blog/" ? "active" : ""
+                        }`}
+                      >
+                        <i className="ri-list-check-2  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
+                        قائمة المقالات
+                      </Link>
+                    </li>
+                  </div>
+                  <div
+                    className={`accordion-collapse ${
+                      openIndex === 2 ? "open" : "hidden"
+                    }`}
+                  >
+                    <li className="sidemenu-item mb-[4px] last:mb-0">
+                      <Link
+                        href="/dashboard/blog/create-blog"
+                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
+                          pathname === "/dashboard/blog/create-blog"
+                            ? "active"
+                            : ""
+                        }`}
+                      >
+                        <i className="ri-newspaper-line  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
+                        إنشاء مقال
+                      </Link>
+                    </li>
+                  </div>
+                </ul>
+              </div>
+            </div>
+
+            <div className="accordion-item rounded-md text-black dark:text-white mb-[5px] whitespace-nowrap">
+              <button
+                className={`accordion-button toggle flex items-center transition-all py-[9px] ltr:pl-[14px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] rounded-md font-medium w-full relative hover:bg-gray-50 text-left dark:hover:bg-[#15203c] ${
+                  openIndex === 5 ? "open" : ""
+                }`}
+                type="button"
+                onClick={() => toggleAccordion(5)}
+              >
+                <i className="material-symbols-outlined transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px">
+                  auto_stories
+                </i>
+                <span className="title leading-none">توصيات العملاء</span>
+              </button>
+
+              <div className="pt-[4px]">
+                <ul className="sidebar-sub-menu">
+                  <div
+                    className={`accordion-collapse ${
+                      openIndex === 5 ? "open" : "hidden"
+                    }`}
+                  >
+                    <li className="sidemenu-item mb-[4px] last:mb-0">
+                      <Link
+                        href="/dashboard/testimonial"
+                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
+                          pathname === "/dashboard/testimonial/" ? "active" : ""
+                        }`}
+                      >
+                        <i className="ri-list-check-2  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
+                        قائمة التوصيات
+                      </Link>
+                    </li>
+                  </div>
+                  <div
+                    className={`accordion-collapse ${
+                      openIndex === 5 ? "open" : "hidden"
+                    }`}
+                  >
+                    <li className="sidemenu-item mb-[4px] last:mb-0">
+                      <Link
+                        href="/dashboard/testimonial/create-testimonial"
+                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
+                          pathname ===
+                          "/dashboard/testimonial/create-testimonial"
+                            ? "active"
+                            : ""
+                        }`}
+                      >
+                        <i className="ri-newspaper-line  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
+                        إنشاء توصية
+                      </Link>
+                    </li>
+                  </div>
+                </ul>
+              </div>
+            </div>
+
             <span className="block relative font-medium uppercase text-gray-400 mb-[8px] text-xs [&:not(:first-child)]:mt-[22px]">
               أخري
             </span>
