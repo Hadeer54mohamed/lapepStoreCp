@@ -288,9 +288,9 @@ const ProductListTable: React.FC = () => {
                             />
                           </div>
                           <span className="block text-[15px] font-medium ltr:ml-[12px] rtl:mr-[12px]">
-                            {item.name_ar.length > 30
+                            {item.name_ar && item.name_ar.length > 30
                               ? item.name_ar.slice(0, 30) + "..."
-                              : item.name_ar}
+                              : item.name_ar || "N/A"}
                           </span>
                         </div>
                       </td>
