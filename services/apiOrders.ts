@@ -418,20 +418,12 @@ export async function getOrderById(id: string): Promise<Order> {
                 price: product.price,
                 image_url: product.image_url || product.images,
               };
-            } else {
-              console.warn(
-                `Product not found for product_id: ${item.product_id}`
-              );
             }
           }
         );
-      } else if (productsError) {
-        console.error("Error fetching products for order:", productsError);
       }
     }
   }
-
-  console.log("Order data with profiles and items:", order);
 
   return order;
 }

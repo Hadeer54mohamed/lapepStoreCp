@@ -337,7 +337,7 @@ const OrderDetailsPage: React.FC = () => {
                       <table className="w-full">
                         <thead>
                           <tr className="border-b border-gray-200 dark:border-gray-700">
-                            <th className="text-left py-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                            <th className="text-right py-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                               المنتج
                             </th>
                             <th className="text-center py-2 text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -360,23 +360,39 @@ const OrderDetailsPage: React.FC = () => {
                               <td className="py-3">
                                 <div className="flex items-center">
                                   {item.products?.image_url &&
-                                    item.products.image_url[0] && (
-                                      <Image
-                                        src={item.products.image_url[0]}
-                                        alt={item.products?.name_ar || "منتج"}
-                                        width={40}
-                                        height={40}
-                                        className="object-cover rounded-md mr-3"
-                                      />
-                                    )}
+                                  item.products.image_url[0] ? (
+                                    <Image
+                                      src={item.products.image_url[0]}
+                                      alt={item.products?.name_ar || "منتج"}
+                                      width={40}
+                                      height={40}
+                                      className="object-cover rounded-md mr-3"
+                                    />
+                                  ) : (
+                                    <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-md mr-3 flex items-center justify-center">
+                                      <i className="material-symbols-outlined text-gray-400 text-sm">
+                                        image
+                                      </i>
+                                    </div>
+                                  )}
                                   <div>
                                     <p className="font-medium text-gray-900 dark:text-white text-sm">
                                       {item.products?.name_ar ||
-                                        "منتج غير محدد"}
+                                        item.products?.name_en ||
+                                        `منتج (ID: ${item.product_id})`}
                                     </p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                                      {item.products?.name_en}
+                                      {item.products?.name_en &&
+                                      item.products?.name_ar !==
+                                        item.products?.name_en
+                                        ? item.products.name_en
+                                        : item.product_id}
                                     </p>
+                                    {!item.products && (
+                                      <p className="text-xs text-red-500 dark:text-red-400">
+                                        تفاصيل المنتج غير متوفرة
+                                      </p>
+                                    )}
                                   </div>
                                 </div>
                               </td>
@@ -433,15 +449,13 @@ const OrderDetailsPage: React.FC = () => {
                       <table className="w-full">
                         <thead>
                           <tr className="border-b border-gray-200 dark:border-gray-700">
-                            <th className="text-left py-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                            <th className=" py-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                               طريقة الدفع
                             </th>
                             <th className="text-center py-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                               المبلغ
                             </th>
-                            <th className="text-right py-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                              رقم المعاملة
-                            </th>
+
                             <th className="text-right py-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                               التاريخ
                             </th>
@@ -454,7 +468,7 @@ const OrderDetailsPage: React.FC = () => {
                               className="border-b border-gray-100 dark:border-gray-700"
                             >
                               <td className="py-3">
-                                <div className="flex items-center">
+                                <div className="flex items-center justify-center gap-1">
                                   <i className="material-symbols-outlined mr-2 text-gray-500">
                                     {payment.payment_method === "paypal"
                                       ? "payments"
@@ -476,11 +490,7 @@ const OrderDetailsPage: React.FC = () => {
                                   ${payment.amount}
                                 </span>
                               </td>
-                              <td className="py-3 text-right">
-                                <span className="text-sm text-gray-600 dark:text-gray-400 font-mono">
-                                  {payment.transaction_id || "غير متوفر"}
-                                </span>
-                              </td>
+
                               <td className="py-3 text-right">
                                 <span className="text-sm text-gray-600 dark:text-gray-400">
                                   {payment.created_at
