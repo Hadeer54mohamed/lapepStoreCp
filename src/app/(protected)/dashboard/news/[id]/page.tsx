@@ -32,6 +32,7 @@ import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 interface ProductFormData {
   name_ar: string;
@@ -174,310 +175,316 @@ export default function EditProductPage() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className=" gap-[25px]">
-        <div className="lg:col-span-2">
-          <div className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md">
-            <div className="trezo-card-header mb-[20px] md:mb-[25px] flex items-center justify-between">
-              <div className="trezo-card-title">
-                <h5 className="!mb-0">تعديل منتج</h5>
-              </div>
-            </div>
+    <>
+      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
+        <h5 className="!mb-0 text-xl font-semibold text-[#011957] dark:text-white">
+          تعديل منتج
+        </h5>
 
-            <div className="trezo-card-content">
-              <div className="sm:grid sm:grid-cols-2 sm:gap-[25px]">
-                {/* العنوانين */}
-                <div>
-                  <label className="block font-medium mb-2">
-                    اسم المنتج (ع)
-                  </label>
-                  <input
-                    {...register("name_ar")}
-                    className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                  />
-                </div>
+        <ol className="breadcrumb flex gap-2 mt-2 md:mt-0 text-sm text-gray-600 dark:text-gray-300">
+          <li>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center text-[#6043FD] hover:text-[#9861FB] transition"
+            >
+              <i className="material-symbols-outlined !text-lg mr-1">home</i>
+              رئيسية
+            </Link>
+          </li>
+          <li>/</li>
+          <li>المنتجات</li>
+          <li>/</li>
+          <li className="text-gray-500 dark:text-gray-400">تعديل منتج</li>
+        </ol>
+      </div>
 
-                <div>
-                  <label className="block font-medium mb-2">
-                    اسم المنتج (EN)
-                  </label>
-                  <input
-                    {...register("name_en")}
-                    className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                  />
-                </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="gap-6">
+          <div className="lg:col-span-2">
+            <div className="trezo-card bg-[#F7F7F7] dark:bg-[#0c1427] mb-6 p-6 rounded-lg shadow">
+              <div className="trezo-card-content">
+                {/* Title Field - غير مطلوب هنا لذا نتخطاه */}
 
-                <div>
-                  <label className="block font-medium mb-2">
-                    السعر الأساسي
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    {...register("price")}
-                    className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-medium mb-2">
-                    سعر العرض (اختياري)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    {...register("offer_price")}
-                    className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-medium mb-2">المخزون</label>
-                  <input
-                    type="number"
-                    {...register("stock_quantity")}
-                    className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-medium mb-2">أفضل مبيع</label>
-                  <div className="flex items-center">
+                {/* Fields */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Name AR */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                      اسم المنتج (بالعربي)
+                    </label>
                     <input
-                      type="checkbox"
-                      id="is_best_seller"
-                      className="w-4 h-4 text-primary-500 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                      {...register("is_best_seller")}
+                      type="text"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-[#F3EBFF] dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                      placeholder="بحد أقصى 100 حرف"
+                      id="name_ar"
+                      {...register("name_ar")}
                     />
-                    <label
-                      htmlFor="is_best_seller"
-                      className="mr-2 text-sm text-gray-700 dark:text-gray-300"
-                    >
-                      تحديد كأفضل مبيع
-                    </label>
                   </div>
-                </div>
 
-                <div>
-                  <label className="block font-medium mb-2">عرض محدود</label>
-                  <div className="flex items-center">
+                  {/* Name EN */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                      اسم المنتج (بالانجليزي)
+                    </label>
                     <input
-                      type="checkbox"
-                      id="limited_time_offer"
-                      className="w-4 h-4 text-primary-500 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                      {...register("limited_time_offer")}
+                      type="text"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-[#F3EBFF] dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                      placeholder="بحد أقصى 100 حرف"
+                      id="name_en"
+                      {...register("name_en")}
                     />
-                    <label
-                      htmlFor="limited_time_offer"
-                      className="mr-2 text-sm text-gray-700 dark:text-gray-300"
-                    >
-                      تحديد كعرض محدود
+                  </div>
+
+                  {/* Category */}
+                  {product && (
+                    <div>
+                      <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                        التصنيف
+                      </label>
+                      <select
+                        className="h-[55px] rounded-md border border-[#BA6FEE] bg-[#F3EBFF] dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                        {...register("category_id")}
+                      >
+                        {categories?.map((category) => (
+                          <option
+                            key={category.id}
+                            value={category.id.toString()}
+                          >
+                            {category.name_ar}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Price */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                      السعر الأساسي
                     </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                      placeholder="0.00"
+                      id="price"
+                      {...register("price")}
+                    />
+                  </div>
+
+                  {/* Offer Price */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                      سعر العرض (اختياري)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                      placeholder="اتركه فارغاً إذا لم يكن هناك خصم"
+                      id="offer_price"
+                      {...register("offer_price")}
+                    />
+                  </div>
+
+                  {/* Stock */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                      المخزون
+                    </label>
+                    <input
+                      type="number"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                      placeholder="0"
+                      id="stock_quantity"
+                      {...register("stock_quantity")}
+                    />
                   </div>
                 </div>
 
-                {/* التصنيف */}
-                {product && (
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      التصنيف
-                    </label>
-                    <select
-                      {...register("category_id")}
-                      className="h-[55px] rounded-md border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[13px] block w-full outline-0 cursor-pointer transition-all focus:border-primary-500"
-                    >
-                      {categories?.map((category) => (
-                        <option
-                          key={category.id}
-                          value={category.id.toString()}
-                        >
-                          {category.name_ar}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-
-                {/* الخبر بالعربية */}
-                <div className="sm:col-span-2">
+                {/* الوصف بالعربية */}
+                <div className="sm:col-span-2 mt-6">
                   <EditorProvider>
                     <Controller
                       control={control}
                       name="description_ar"
                       render={({ field }) => (
                         <div className="sm:col-span-2">
-                          <label className="block font-medium mb-2">
+                          <label className="mb-2 text-[#011957] dark:text-white font-medium block">
                             وصف المنتج (بالعربي)
                           </label>
-                          <EditorProvider>
-                            <Editor
-                              style={{ minHeight: "200px" }}
-                              value={field.value}
-                              onChange={field.onChange}
-                            >
-                              <Toolbar>
-                                <BtnUndo />
-                                <BtnRedo />
-                                <Separator />
-                                <BtnBold />
-                                <BtnItalic />
-                                <BtnUnderline />
-                                <BtnStrikeThrough />
-                                <Separator />
-                                <BtnNumberedList />
-                                <BtnBulletList />
-                                <Separator />
-                                <BtnLink />
-                                <BtnClearFormatting />
-                                <HtmlButton />
-                                <Separator />
-                                <BtnStyles />
-                              </Toolbar>
-                            </Editor>
-                          </EditorProvider>
+                          <Editor
+                            style={{ minHeight: "200px" }}
+                            value={field.value}
+                            onChange={field.onChange}
+                            containerProps={{
+                              style: {
+                                borderColor: "#BA6FEE",
+                                background: "#F9F6FF",
+                                color: "#011957",
+                              },
+                            }}
+                          >
+                            <Toolbar>
+                              <BtnUndo />
+                              <BtnRedo />
+                              <Separator />
+                              <BtnBold />
+                              <BtnItalic />
+                              <BtnUnderline />
+                              <BtnStrikeThrough />
+                              <Separator />
+                              <BtnNumberedList />
+                              <BtnBulletList />
+                              <Separator />
+                              <BtnLink />
+                              <BtnClearFormatting />
+                              <HtmlButton />
+                              <Separator />
+                              <BtnStyles />
+                            </Toolbar>
+                          </Editor>
                         </div>
                       )}
                     />
                   </EditorProvider>
                 </div>
 
-                {/* الخبر بالانجليزية */}
-                <div className="sm:col-span-2">
+                {/* الوصف بالانجليزية */}
+                <div className="sm:col-span-2 mt-6">
                   <EditorProvider>
                     <Controller
                       control={control}
                       name="description_en"
                       render={({ field }) => (
                         <div className="sm:col-span-2">
-                          <label className="block font-medium mb-2">
+                          <label className="mb-2 text-[#011957] dark:text-white font-medium block">
                             وصف المنتج (بالانجليزي)
                           </label>
-                          <EditorProvider>
-                            <Editor
-                              style={{ minHeight: "200px" }}
-                              value={field.value}
-                              onChange={field.onChange}
-                            >
-                              <Toolbar>
-                                <BtnUndo />
-                                <BtnRedo />
-                                <Separator />
-                                <BtnBold />
-                                <BtnItalic />
-                                <BtnUnderline />
-                                <BtnStrikeThrough />
-                                <Separator />
-                                <BtnNumberedList />
-                                <BtnBulletList />
-                                <Separator />
-                                <BtnLink />
-                                <BtnClearFormatting />
-                                <HtmlButton />
-                                <Separator />
-                                <BtnStyles />
-                              </Toolbar>
-                            </Editor>
-                          </EditorProvider>
+                          <Editor
+                            style={{ minHeight: "200px" }}
+                            value={field.value}
+                            onChange={field.onChange}
+                            containerProps={{
+                              style: {
+                                borderColor: "#BA6FEE",
+                                background: "#F9F6FF",
+                                color: "#011957",
+                              },
+                            }}
+                          >
+                            <Toolbar>
+                              <BtnUndo />
+                              <BtnRedo />
+                              <Separator />
+                              <BtnBold />
+                              <BtnItalic />
+                              <BtnUnderline />
+                              <BtnStrikeThrough />
+                              <Separator />
+                              <BtnNumberedList />
+                              <BtnBulletList />
+                              <Separator />
+                              <BtnLink />
+                              <BtnClearFormatting />
+                              <HtmlButton />
+                              <Separator />
+                              <BtnStyles />
+                            </Toolbar>
+                          </Editor>
                         </div>
                       )}
                     />
                   </EditorProvider>
                 </div>
 
-                {/* الصورة */}
-                <div className="sm:col-span-2 mb-[20px] sm:mb-0">
-                  <label className="mb-[10px] text-black dark:text-white font-medium block">
-                    صورة المنتج
+                {/* صندوق الرفع */}
+                <div className="mt-6">
+                  <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                    صور المنتج
                   </label>
-
-                  <div id="fileUploader">
-                    <div className="relative flex items-center justify-center overflow-hidden rounded-md py-[88px] px-[20px] border border-gray-200 dark:border-[#172036]">
-                      <div className="flex items-center justify-center">
-                        <div className="w-[35px] h-[35px] border border-gray-100 dark:border-[#15203c] flex items-center justify-center rounded-md text-primary-500 text-lg ltr:mr-[12px] rtl:ml-[12px]">
-                          <i className="ri-upload-2-line"></i>
-                        </div>
-                        <p className="leading-[1.5]">
-                          <strong className="text-black dark:text-white">
-                            اضغط لرفع
-                          </strong>
-                          <br /> صورة المنتج من هنا
-                        </p>
+                  <div className="relative flex items-center justify-center rounded-md py-16 px-4 border-2 border-dashed border-[#BA6FEE] bg-[#F9F6FF] dark:bg-[#1a1a33]">
+                    <div className="text-center">
+                      <div className="w-[35px] h-[35px] border border-[#9861FB] flex items-center justify-center rounded-md text-[#6043FD] mb-3">
+                        <i className="ri-upload-2-line"></i>
                       </div>
-
-                      <input
-                        type="file"
-                        id="image"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="absolute top-0 left-0 right-0 bottom-0 rounded-md z-[1] opacity-0 cursor-pointer"
-                      />
+                      <p className="text-[#011957] dark:text-white">
+                        <strong>اضغط لرفع</strong> صور المنتج
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        يمكنك رفع صورة جديدة أو إبقاء الصور الحالية
+                      </p>
                     </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      onChange={handleImageChange}
+                    />
+                  </div>
 
-                    {/* Image Preview */}
-                    <div className="mt-[10px] flex flex-wrap gap-2">
-                      {/* صور السيرفر */}
-                      {serverImages.map((imageUrl, index) => (
-                        <div key={index} className="relative w-[50px] h-[50px]">
-                          <Image
-                            src={imageUrl}
-                            alt={`server-img-${index}`}
-                            width={50}
-                            height={50}
-                            className="rounded-md object-cover w-full h-full"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.src = "/placeholder.png";
-                            }}
-                          />
-                          <button
-                            type="button"
-                            className="absolute top-[-5px] right-[-5px] bg-red-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded-full text-xs"
-                            onClick={() => {
-                              const newImages = serverImages.filter(
-                                (_, i) => i !== index
-                              );
-                              setServerImages(newImages);
-                            }}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
+                  {/* المعاينة */}
+                  <div className="mt-[10px] flex flex-wrap gap-2">
+                    {serverImages.map((imageUrl, index) => (
+                      <div key={index} className="relative w-[50px] h-[50px]">
+                        <Image
+                          src={imageUrl}
+                          alt={`server-img-${index}`}
+                          width={50}
+                          height={50}
+                          className="rounded-md object-cover w-full h-full"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = "/placeholder.png";
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className="absolute top-[-5px] right-[-5px] bg-red-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded-full text-xs"
+                          onClick={() => {
+                            const newImages = serverImages.filter(
+                              (_, i) => i !== index
+                            );
+                            setServerImages(newImages);
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
 
-                      {/* صورة الرفع الجديدة */}
-                      {selectedImage && (
-                        <div className="relative w-[50px] h-[50px]">
-                          <Image
-                            src={URL.createObjectURL(selectedImage)}
-                            alt="selected-img"
-                            width={50}
-                            height={50}
-                            className="rounded-md object-cover w-full h-full"
-                          />
-                          <button
-                            type="button"
-                            className="absolute top-[-5px] right-[-5px] bg-orange-500 text-white w-[20px] h-[20px] flex items-center justify-center rounded-full text-xs"
-                            onClick={() => setSelectedImage(null)}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    {selectedImage && (
+                      <div className="relative w-[50px] h-[50px]">
+                        <Image
+                          src={URL.createObjectURL(selectedImage)}
+                          alt="selected-img"
+                          width={50}
+                          height={50}
+                          className="rounded-md object-cover w-full h-full"
+                        />
+                        <button
+                          type="button"
+                          className="absolute top-[-5px] right-[-5px] bg-orange-500 text-white w-[20px] h-[20px] flex items-center justify-center rounded-full text-xs"
+                          onClick={() => setSelectedImage(null)}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* الأزرار */}
-      <div className="trezo-card mb-[25px]">
-        <div className="trezo-card-content">
+        {/* Buttons */}
+        <div className="flex gap-3 pb-6">
           <button
-            type="reset"
-            className="font-medium inline-block transition-all rounded-md md:text-md ltr:mr-[15px] rtl:ml-[15px] py-[10px] md:py-[12px] px-[20px] md:px-[22px] bg-danger-500 text-white hover:bg-danger-400"
+            type="button"
+            onClick={() => router.push("/dashboard/news")}
+            className="py-3 px-6 rounded-lg bg-[#E10E0E] text-white font-medium shadow hover:bg-red-600 transition"
           >
             إلغاء
           </button>
@@ -485,35 +492,16 @@ export default function EditProductPage() {
           <button
             type="submit"
             disabled={isSubmitting || isUploadingImage}
-            className="font-medium inline-block transition-all rounded-md md:text-md py-[10px] md:py-[12px] px-[20px] md:px-[22px] bg-primary-500 text-white hover:bg-primary-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="py-3 px-6 rounded-lg bg-[#6043FD] hover:bg-[#9861FB] text-white font-medium shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span className="inline-block relative ltr:pl-[29px] rtl:pr-[29px]">
-              {isUploadingImage ? (
-                <>
-                  <i className="material-symbols-outlined ltr:left-0 rtl:right-0 absolute top-1/2 -translate-y-1/2 animate-spin">
-                    sync
-                  </i>
-                  جاري رفع الصورة...
-                </>
-              ) : isSubmitting ? (
-                <>
-                  <i className="material-symbols-outlined ltr:left-0 rtl:right-0 absolute top-1/2 -translate-y-1/2 animate-spin">
-                    sync
-                  </i>
-                  جاري الحفظ...
-                </>
-              ) : (
-                <>
-                  <i className="material-symbols-outlined ltr:left-0 rtl:right-0 absolute top-1/2 -translate-y-1/2">
-                    save
-                  </i>
-                  حفظ التعديلات
-                </>
-              )}
-            </span>
+            {isUploadingImage
+              ? "جاري رفع الصورة..."
+              : isSubmitting
+              ? "جاري الحفظ..."
+              : "حفظ التعديلات"}
           </button>
         </div>
-      </div>
-    </form>
+      </form>
+    </>
   );
 }

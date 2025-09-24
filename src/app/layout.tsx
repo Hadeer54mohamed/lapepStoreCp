@@ -8,15 +8,15 @@ import "swiper/css/bundle";
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Cairo } from "next/font/google";
 
 import QueryProvider from "@/providers/QueryProvider";
 
 import { Toaster } from "react-hot-toast";
 
-const inter = Inter({
+const cairo = Cairo({
   variable: "--font-body",
-  subsets: ["latin"],
+  subsets: ["arabic", "latin"],
 });
 
 export const metadata: Metadata = {
@@ -30,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir="rtl">
-      <body className={`${inter.variable} antialiased`}>
+    <html lang="ar" dir="rtl">
+      <body className={`${cairo.variable} antialiased`}>
         <QueryProvider>{children}</QueryProvider>
         <Toaster position="top-center" />
       </body>

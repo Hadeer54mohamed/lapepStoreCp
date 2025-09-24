@@ -3,50 +3,55 @@
 @custom-variant dark (&:where([class=dark], [class=dark] *));
 
 @theme {
-  --font-body: "Inter", serif;
+  --font-body: "Cairo", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   --text-xs: 12px;
   --text-sm: 13px;
   --text-base: 14px;
   --text-md: 16px;
   --text-lg: 18px;
-  --text-xl: 24px;
+  --text-xl: 20px;
   --text-2xl: 28px;
   --text-3xl: 32px;
   --text-4xl: 36px;
   --text-5xl: 40px;
-  --color-white: #ffffff;
-  --color-black: #3a4252;
+
+  --color-white:  #F7F7F7;
+  --color-black:  #011957;
   --color-dark: #000000;
-  --color-primary-50: #ecf0ff;
-  --color-primary-100: #dde4ff;
-  --color-primary-200: #c2cdff;
-  --color-primary-300: #9caaff;
-  --color-primary-400: #757dff;
-  --color-primary-500: #605dff;
-  --color-primary-600: #4936f5;
-  --color-primary-700: #3e2ad8;
-  --color-primary-800: #3225ae;
-  --color-primary-900: #2d2689;
-  --color-secondary-50: #eef6ff;
-  --color-secondary-100: #daebff;
-  --color-secondary-200: #bddcff;
-  --color-secondary-300: #90c7ff;
-  --color-secondary-400: #5da8ff;
-  --color-secondary-500: #3584fc;
-  --color-secondary-600: #1f64f1;
-  --color-secondary-700: #174ede;
-  --color-secondary-800: #1940b4;
-  --color-secondary-900: #1a3a8e;
+
+  --color-primary-50: #F7F7F7;
+  --color-primary-100: #eceef2;
+  --color-primary-200: #d5d9e2;
+  --color-primary-300: #BA6FEE;
+  --color-primary-400: #9861FB;
+  --color-primary-500: #6043FD;
+  --color-primary-600: #6043FD;
+  --color-primary-700: #6043FD;
+  --color-primary-800: #6043FD;
+  --color-primary-900: #011957;
+
+  --color-secondary-50: #F7F7F7;
+  --color-secondary-100: #eceef2;
+  --color-secondary-200: #d5d9e2;
+  --color-secondary-300: #BA6FEE;
+  --color-secondary-400: #9861FB;
+  --color-secondary-500: #6043FD;
+  --color-secondary-600: #6043FD;
+  --color-secondary-700: #6043FD;
+  --color-secondary-800: #6043FD;
+  --color-secondary-900: #011957;
+
   --color-purple-50: #faf5ff;
   --color-purple-100: #f3e8ff;
   --color-purple-200: #e9d5ff;
   --color-purple-300: #d7b5fd;
   --color-purple-400: #bf85fb;
-  --color-purple-500: #ad63f6;
-  --color-purple-600: #9135e8;
-  --color-purple-700: #7c24cc;
-  --color-purple-800: #6a22a7;
-  --color-purple-900: #571d86;
+  --color-purple-500: #9861FB;
+  --color-purple-600: #BA6FEE;
+  --color-purple-700: #6043FD;
+  --color-purple-800: #3225ae;
+  --color-purple-900: #011957;
+
   --color-success-50: #eeffe5;
   --color-success-100: #d8ffc8;
   --color-success-200: #b2ff97;
@@ -57,6 +62,7 @@
   --color-success-700: #1e8308;
   --color-success-800: #1d670d;
   --color-success-900: #1a5710;
+
   --color-orange-50: #fff5ed;
   --color-orange-100: #ffe8d4;
   --color-orange-200: #ffcea9;
@@ -67,17 +73,19 @@
   --color-orange-700: #c52b09;
   --color-orange-800: #9c2410;
   --color-orange-900: #7e2010;
+
   --color-danger-50: #fff2f0;
   --color-danger-100: #ffe1dd;
   --color-danger-200: #ffc8c0;
   --color-danger-300: #ffa294;
   --color-danger-400: #ff6d57;
-  --color-danger-500: #ff4023;
-  --color-danger-600: #ec1f00;
-  --color-danger-700: #d71c00;
+  --color-danger-500: #E10E0E;
+  --color-danger-600: #E10E0E;
+  --color-danger-700: #E10E0E;
   --color-danger-800: #b11a03;
   --color-danger-900: #921c0a;
-  --color-gray-50: #f6f7f9;
+
+  --color-gray-50: #F7F7F7;
   --color-gray-100: #eceef2;
   --color-gray-200: #d5d9e2;
   --color-gray-300: #b1bbc8;
@@ -86,7 +94,8 @@
   --color-gray-600: #526077;
   --color-gray-700: #434e61;
   --color-gray-800: #3a4252;
-  --color-gray-900: #23272e;
+  --color-gray-900: #011957;
+
   --color-warning-50: #fff8e1;
   --color-warning-100: #ffecb3;
   --color-warning-200: #ffe082;
@@ -97,6 +106,7 @@
   --color-warning-700: #ffa000;
   --color-warning-800: #ff8f00;
   --color-warning-900: #ff6f00;
+
   --color-info-50: #e1f7fe;
   --color-info-100: #b3ecfc;
   --color-info-200: #80e0fa;
@@ -107,7 +117,16 @@
   --color-info-700: #009cbb;
   --color-info-800: #0088a2;
   --color-info-900: #006574;
+  
   --shadow-3xl: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+:root {
+  --color-primary-hover: #f3ebff; /* بنفسجي فاتح خفيف */
+}
+
+.dark {
+  --color-primary-hover: rgba(186, 111, 238, 0.15); /* نسخة شفافة للدارك مود */
 }
 
 /** Body */
@@ -226,7 +245,7 @@ button {
           .sidemenu-item {
             .sidemenu-link {
               &::after {
-                content: "";
+               
                 @apply top-1/2 -translate-y-1/2 w-[10px] h-[10px] rounded-full transition-all absolute border border-gray-500 dark:border-gray-400;
               }
               &.toggle {

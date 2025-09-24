@@ -10,397 +10,242 @@ interface SidebarMenuProps {
   toggleActive: () => void;
 }
 
-const SidebarMenu: React.FC<SidebarMenuProps> = ({ toggleActive }) => {
+interface AccordionItemProps {
+  index: number;
+  openIndex: number | null;
+  toggleAccordion: (index: number) => void;
+  icon: string;
+  title: string;
+  links: { href: string; label: string; icon?: string }[];
+}
+
+const AccordionItem: React.FC<AccordionItemProps> = ({
+  index,
+  openIndex,
+  toggleAccordion,
+  icon,
+  title,
+  links,
+}) => {
   const pathname = usePathname();
 
+  return (
+    <div className="accordion-item rounded-md mb-[5px] whitespace-nowrap">
+      <button
+        className={`accordion-button flex items-center transition-all py-[9px] px-[14px] rounded-md font-medium w-full relative hover:bg-[#F3EBFF] ${
+          openIndex === index ? "text-[#6043FD]" : "text-gray-700 dark:text-gray-300"
+        }`}
+        type="button"
+        onClick={() => toggleAccordion(index)}
+      >
+        <i
+          className={`material-symbols-outlined ltr:mr-3 rtl:ml-3 text-[22px] transition-colors ${
+            openIndex === index ? "text-[#6043FD]" : "text-gray-500 dark:text-gray-400"
+          }`}
+        >
+          {icon}
+        </i>
+        {title}
+      </button>
+
+      <div className={`${openIndex === index ? "block" : "hidden"}`}>
+        <ul className="sidebar-sub-menu">
+          {links.map((link) => (
+            <li key={link.href} className="sidemenu-item mb-[4px] last:mb-0">
+              <Link
+                href={link.href}
+                className={`sidemenu-link flex items-center py-[9px] pl-[38px] rounded-md font-medium transition-all w-full text-left hover:bg-[#F3EBFF] ${
+                  pathname.startsWith(link.href)
+                    ? "text-[#6043FD] bg-[#F3EBFF]"
+                    : "text-gray-500 dark:text-gray-400"
+                }`}
+              >
+                {link.icon && (
+                  <i
+                    className={`ri-${link.icon} ltr:mr-3 rtl:ml-3 text-[22px] transition-colors ${
+                      pathname.startsWith(link.href)
+                        ? "text-[#6043FD]"
+                        : "text-gray-500 dark:text-gray-400"
+                    }`}
+                  ></i>
+                )}
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+const SidebarMenu: React.FC<SidebarMenuProps> = ({ toggleActive }) => {
+  const pathname = usePathname();
   const { logout } = useLogout();
 
-  // Initialize openIndex to 0 to open the first item by default
-  const [openIndex, setOpenIndex] = React.useState<number | null>(0);
+  const initialIndex =
+    pathname.startsWith("/dashboard/news")
+      ? 0
+      : pathname.startsWith("/dashboard/blog")
+      ? 2
+      : pathname.startsWith("/dashboard/testimonial")
+      ? 5
+      : pathname.startsWith("/dashboard/banners")
+      ? 6
+      : pathname.startsWith("/dashboard/my-profile")
+      ? 29
+      : null;
+
+  const [openIndex, setOpenIndex] = React.useState<number | null>(initialIndex);
 
   const toggleAccordion = (index: number) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
   return (
-    <>
-      <div className="sidebar-area bg-white dark:bg-[#0c1427] fixed z-[7] top-0 h-screen transition-all rounded-r-md">
-        <div className="logo bg-white dark:bg-[#0c1427] border-b border-gray-100 dark:border-[#172036] px-[25px] pt-[19px] pb-[15px] absolute z-[2] right-0 top-0 left-0">
+    <div className="sidebar-area bg-white dark:bg-[#0c1427] fixed z-[7] top-0 h-screen transition-all rounded-r-md">
+      <div className="logo bg-white dark:bg-[#0c1427] border-b border-gray-100 dark:border-[#172036] px-[25px] pt-[19px] pb-[7px] absolute z-[2] right-0 top-0 left-0">
+        <Link href="/dashboard" className="flex items-center">
+          <Image src="/images/ENS.png" alt="logo-icon" width={150} height={150} />
+        </Link>
+
+        <button
+          type="button"
+          className="burger-menu absolute top-[24px] left-[25px] hover:text-[#6043FD]"
+          onClick={toggleActive}
+        >
+          <i className="material-symbols-outlined">close</i>
+        </button>
+      </div>
+
+      <div className="pt-[89px] px-[22px] pb-[20px] h-screen overflow-y-auto sidebar-custom-scrollbar">
+        <div className="accordion">
+          <span className="block relative font-medium uppercase text-gray-400 mb-[8px] text-xs">
+            رئيسي
+          </span>
+
+          {/* المنتجات */}
+          <AccordionItem
+            index={0}
+            openIndex={openIndex}
+            toggleAccordion={toggleAccordion}
+            icon="newspaper"
+            title="المنتجات"
+            links={[
+              { href: "/dashboard/news", label: "قائمة المنتجات", icon: "list-check-2" },
+              { href: "/dashboard/news/create-news", label: "إنشاء منتج", icon: "newspaper-line" },
+              { href: "/dashboard/news/categories", label: "تصنيفات", icon: "price-tag-3-line" },
+            ]}
+          />
+
+          {/* الطلبات */}
           <Link
-            href="/dashboard"
-            className="transition-none relative flex items-center outline-none"
+            href="/dashboard/orders"
+            className={`sidemenu-link flex items-center py-[9px] pl-[38px] rounded-md font-medium transition-all hover:bg-[#F3EBFF] ${
+              pathname.startsWith("/dashboard/orders")
+                ? "text-[#6043FD] bg-[#F3EBFF]"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
           >
-            <Image
-              src="/images/logo-icon.svg"
-              alt="logo-icon"
-              width={26}
-              height={26}
-            />
-            <span className="font-bold text-black dark:text-white relative ltr:ml-[8px] rtl:mr-[8px] top-px text-xl">
-              ENS
-            </span>
+            <i
+              className={`ri-multi-image-fill ltr:mr-3 rtl:ml-3 text-[22px] ${
+                pathname.startsWith("/dashboard/orders")
+                  ? "text-[#6043FD]"
+                  : "text-gray-500 dark:text-gray-400"
+              }`}
+            ></i>
+            قائمة الطلبات
           </Link>
 
-          <button
-            type="button"
-            className="burger-menu inline-block absolute z-[3] top-[24px] ltr:right-[25px] rtl:left-[25px] transition-all hover:text-primary-500"
-            onClick={toggleActive}
+          {/* مقالات */}
+          <AccordionItem
+            index={2}
+            openIndex={openIndex}
+            toggleAccordion={toggleAccordion}
+            icon="auto_stories"
+            title="مقالات"
+            links={[
+              { href: "/dashboard/blog", label: "قائمة المقالات", icon: "list-check-2" },
+              { href: "/dashboard/blog/create-blog", label: "إنشاء مقال", icon: "newspaper-line" },
+            ]}
+          />
+
+          {/* توصيات العملاء */}
+          <AccordionItem
+            index={5}
+            openIndex={openIndex}
+            toggleAccordion={toggleAccordion}
+            icon="auto_stories"
+            title="توصيات العملاء"
+            links={[
+              { href: "/dashboard/testimonial", label: "قائمة التوصيات", icon: "list-check-2" },
+              { href: "/dashboard/testimonial/create-testimonial", label: "إنشاء توصية", icon: "newspaper-line" },
+            ]}
+          />
+
+          {/* البانرات */}
+          <AccordionItem
+            index={6}
+            openIndex={openIndex}
+            toggleAccordion={toggleAccordion}
+            icon="image"
+            title="البانرات"
+            links={[
+              { href: "/dashboard/banners", label: "قائمة البانرات", icon: "list-check-2" },
+              { href: "/dashboard/banners/create", label: "إنشاء بانر جديد", icon: "add-line" },
+            ]}
+          />
+
+          <span className="block relative font-medium uppercase text-gray-400 mb-[8px] text-xs [&:not(:first-child)]:mt-[22px]">
+            أخري
+          </span>
+
+          {/* ملفي الشخصي */}
+          <Link
+            href="/dashboard/my-profile"
+            className={`accordion-button flex items-center py-[9px] pl-[14px] rounded-md transition-all hover:bg-[#F3EBFF] ${
+              pathname.startsWith("/dashboard/my-profile")
+                ? "text-[#6043FD] bg-[#F3EBFF]"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
           >
-            <i className="material-symbols-outlined">close</i>
-          </button>
-        </div>
-
-        <div className="pt-[89px] px-[22px] pb-[20px] h-screen overflow-y-scroll sidebar-custom-scrollbar">
-          <div className="accordion">
-            <span className="block relative font-medium uppercase text-gray-400 mb-[8px] text-xs">
-              رئيسي
-            </span>
-
-            <div className="accordion-item rounded-md text-black dark:text-white mb-[5px] whitespace-nowrap">
-              <button
-                className={`accordion-button toggle flex items-center transition-all py-[9px] ltr:pl-[14px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] rounded-md font-medium w-full relative hover:bg-gray-50 text-left dark:hover:bg-[#15203c] ${
-                  openIndex === 0 ? "open" : ""
-                }`}
-                type="button"
-                onClick={() => toggleAccordion(0)}
-              >
-                <i className="material-symbols-outlined transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px">
-                  newspaper
-                </i>
-                <span className="title leading-none">المنتجات</span>
-              </button>
-
-              {/* المنتجات */}
-              <div className="pt-[4px]">
-                <ul className="sidebar-sub-menu">
-                  <div
-                    className={`accordion-collapse ${
-                      openIndex === 0 ? "open" : "hidden"
-                    }`}
-                  >
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/news"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/news/" ? "active" : ""
-                        }`}
-                      >
-                        <i className="ri-list-check-2  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
-                        قائمة المنتجات
-                      </Link>
-                    </li>
-                  </div>
-                  <div
-                    className={`accordion-collapse ${
-                      openIndex === 0 ? "open" : "hidden"
-                    }`}
-                  >
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/news/create-news"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/news/create-news"
-                            ? "active"
-                            : ""
-                        }`}
-                      >
-                        <i className="ri-newspaper-line  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
-                        إنشاء منتج
-                      </Link>
-                    </li>
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/news/categories/"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/news/categories/"
-                            ? "active"
-                            : ""
-                        }`}
-                      >
-                        <i className="ri-price-tag-3-line  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
-                        تصنيفات
-                      </Link>
-                    </li>
-                  </div>
-                </ul>
-              </div>
-            </div>
-
-            <Link
-              href="/dashboard/orders"
-              className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                pathname === "/dashboard/orders/" ? "active" : ""
+            <i
+              className={`material-symbols-outlined ltr:mr-3 rtl:ml-3 text-[22px] ${
+                pathname.startsWith("/dashboard/my-profile")
+                  ? "text-[#6043FD]"
+                  : "text-gray-500 dark:text-gray-400"
               }`}
             >
-              <i className="ri-multi-image-fill  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
-              قائمة الطلبات
-            </Link>
+              account_circle
+            </i>
+            ملفي الشخصي
+          </Link>
 
-            <div className="accordion-item rounded-md text-black dark:text-white mb-[5px] whitespace-nowrap">
-              <button
-                className={`accordion-button toggle flex items-center transition-all py-[9px] ltr:pl-[14px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] rounded-md font-medium w-full relative hover:bg-gray-50 text-left dark:hover:bg-[#15203c] ${
-                  openIndex === 2 ? "open" : ""
-                }`}
-                type="button"
-                onClick={() => toggleAccordion(2)}
-              >
-                <i className="material-symbols-outlined transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px">
-                  auto_stories
-                </i>
-                <span className="title leading-none">مقالات</span>
-              </button>
+          {/* إعدادات */}
+          <AccordionItem
+            index={29}
+            openIndex={openIndex}
+            toggleAccordion={toggleAccordion}
+            icon="settings"
+            title="إعدادات"
+            links={[
+              { href: "/dashboard/my-profile/edit", label: "إعدادات الحساب" },
+              { href: "/dashboard/my-profile/change-password", label: "تغيير كلمة المرور" },
+              { href: "/dashboard/add-user", label: "أضف مستخدم" },
+            ]}
+          />
 
-              <div className="pt-[4px]">
-                <ul className="sidebar-sub-menu">
-                  <div
-                    className={`accordion-collapse ${
-                      openIndex === 2 ? "open" : "hidden"
-                    }`}
-                  >
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/blog"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/blog/" ? "active" : ""
-                        }`}
-                      >
-                        <i className="ri-list-check-2  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
-                        قائمة المقالات
-                      </Link>
-                    </li>
-                  </div>
-                  <div
-                    className={`accordion-collapse ${
-                      openIndex === 2 ? "open" : "hidden"
-                    }`}
-                  >
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/blog/create-blog"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/blog/create-blog"
-                            ? "active"
-                            : ""
-                        }`}
-                      >
-                        <i className="ri-newspaper-line  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
-                        إنشاء مقال
-                      </Link>
-                    </li>
-                  </div>
-                </ul>
-              </div>
-            </div>
-
-            <div className="accordion-item rounded-md text-black dark:text-white mb-[5px] whitespace-nowrap">
-              <button
-                className={`accordion-button toggle flex items-center transition-all py-[9px] ltr:pl-[14px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] rounded-md font-medium w-full relative hover:bg-gray-50 text-left dark:hover:bg-[#15203c] ${
-                  openIndex === 5 ? "open" : ""
-                }`}
-                type="button"
-                onClick={() => toggleAccordion(5)}
-              >
-                <i className="material-symbols-outlined transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px">
-                  auto_stories
-                </i>
-                <span className="title leading-none">توصيات العملاء</span>
-              </button>
-
-              <div className="pt-[4px]">
-                <ul className="sidebar-sub-menu">
-                  <div
-                    className={`accordion-collapse ${
-                      openIndex === 5 ? "open" : "hidden"
-                    }`}
-                  >
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/testimonial"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/testimonial/" ? "active" : ""
-                        }`}
-                      >
-                        <i className="ri-list-check-2  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
-                        قائمة التوصيات
-                      </Link>
-                    </li>
-                  </div>
-                  <div
-                    className={`accordion-collapse ${
-                      openIndex === 5 ? "open" : "hidden"
-                    }`}
-                  >
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/testimonial/create-testimonial"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname ===
-                          "/dashboard/testimonial/create-testimonial"
-                            ? "active"
-                            : ""
-                        }`}
-                      >
-                        <i className="ri-newspaper-line  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
-                        إنشاء توصية
-                      </Link>
-                    </li>
-                  </div>
-                </ul>
-              </div>
-            </div>
-
-            <div className="accordion-item rounded-md text-black dark:text-white mb-[5px] whitespace-nowrap">
-              <button
-                className={`accordion-button toggle flex items-center transition-all py-[9px] ltr:pl-[14px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] rounded-md font-medium w-full relative hover:bg-gray-50 text-left dark:hover:bg-[#15203c] ${
-                  openIndex === 6 ? "open" : ""
-                }`}
-                type="button"
-                onClick={() => toggleAccordion(6)}
-              >
-                <i className="material-symbols-outlined transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px">
-                  image
-                </i>
-                <span className="title leading-none">البانرات</span>
-              </button>
-
-              <div className="pt-[4px]">
-                <ul className="sidebar-sub-menu">
-                  <div
-                    className={`accordion-collapse ${
-                      openIndex === 6 ? "open" : "hidden"
-                    }`}
-                  >
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/banners"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/banners" ? "active" : ""
-                        }`}
-                      >
-                        <i className="ri-list-check-2  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
-                        قائمة البانرات
-                      </Link>
-                    </li>
-                  </div>
-                  <div
-                    className={`accordion-collapse ${
-                      openIndex === 6 ? "open" : "hidden"
-                    }`}
-                  >
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/banners/create"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/banners/create"
-                            ? "active"
-                            : ""
-                        }`}
-                      >
-                        <i className="ri-add-line  transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px"></i>
-                        إنشاء بانر جديد
-                      </Link>
-                    </li>
-                  </div>
-                </ul>
-              </div>
-            </div>
-
-            <span className="block relative font-medium uppercase text-gray-400 mb-[8px] text-xs [&:not(:first-child)]:mt-[22px]">
-              أخري
-            </span>
-
-            <div className="accordion-item rounded-md text-black dark:text-white mb-[5px] whitespace-nowrap">
-              <Link
-                href="/dashboard/my-profile/"
-                className={`accordion-button flex items-center transition-all py-[9px] ltr:pl-[14px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] rounded-md font-medium w-full relative hover:bg-gray-50 text-left dark:hover:bg-[#15203c] ${
-                  pathname === "/dashboard/my-profile/" ? "active" : ""
-                }`}
-              >
-                <i className="material-symbols-outlined transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px">
-                  account_circle
-                </i>
-                <span className="title leading-none">ملفي الشخصي</span>
-              </Link>
-            </div>
-
-            <div className="accordion-item rounded-md text-black dark:text-white mb-[5px] whitespace-nowrap">
-              <button
-                className={`accordion-button toggle flex items-center transition-all py-[9px] ltr:pl-[14px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] rounded-md font-medium w-full relative hover:bg-gray-50 text-left dark:hover:bg-[#15203c] ${
-                  openIndex === 29 ? "open" : ""
-                }`}
-                type="button"
-                onClick={() => toggleAccordion(29)}
-              >
-                <i className="material-symbols-outlined transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px">
-                  settings
-                </i>
-                <span className="title leading-none">إعدادات</span>
-              </button>
-
-              <div
-                className={`accordion-collapse ${
-                  openIndex === 29 ? "open" : "hidden"
-                }`}
-              >
-                <div className="pt-[4px]">
-                  <ul className="sidebar-sub-menu">
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/my-profile/edit/"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[38px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/my-profile/edit/"
-                            ? "active"
-                            : ""
-                        }`}
-                      >
-                        إعدادات الحساب
-                      </Link>
-                    </li>
-
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/my-profile/change-password/"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[38px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/my-profile/change-password/"
-                            ? "active"
-                            : ""
-                        }`}
-                      >
-                        تغيير كلمة المرور
-                      </Link>
-                    </li>
-                    <li className="sidemenu-item mb-[4px] last:mb-0">
-                      <Link
-                        href="/dashboard/add-user/"
-                        className={`sidemenu-link rounded-md flex items-center relative transition-all font-medium text-gray-500 dark:text-gray-400 py-[9px] ltr:pl-[38px] ltr:pr-[30px] rtl:pr-[38px] rtl:pl-[30px] hover:text-primary-500 hover:bg-primary-50 w-full text-left dark:hover:bg-[#15203c] ${
-                          pathname === "/dashboard/add-user/" ? "active" : ""
-                        }`}
-                      >
-                        أضف مستخدم
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="accordion-item rounded-md text-black dark:text-white mb-[5px] whitespace-nowrap">
-              <button
-                onClick={() => logout()}
-                className={`accordion-button flex items-center transition-all py-[9px] ltr:pl-[14px] ltr:pr-[30px] rtl:pr-[14px] rtl:pl-[30px] rounded-md font-medium w-full relative hover:bg-gray-50 text-left dark:hover:bg-[#15203c] ${
-                  pathname === "/" ? "active" : ""
-                }`}
-              >
-                <i className="material-symbols-outlined transition-all text-gray-500 dark:text-gray-400 ltr:mr-[7px] rtl:ml-[7px] !text-[22px] leading-none relative -top-px">
-                  logout
-                </i>
-                <span className="title leading-none">تسجيل الخروج</span>
-              </button>
-            </div>
-          </div>
+          {/* تسجيل الخروج */}
+          <button
+            onClick={() => logout()}
+            className="accordion-button flex items-center py-[9px] pl-[14px] rounded-md transition-all hover:bg-[#F3EBFF] text-gray-500 dark:text-gray-400"
+          >
+            <i className="material-symbols-outlined ltr:mr-3 rtl:ml-3 text-[22px]">logout</i>
+            تسجيل الخروج
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -210,416 +210,255 @@ const CreateProductForm: React.FC = () => {
 
   return (
     <>
-      <div className="mb-[25px] md:flex items-center justify-between">
-        <h5 className="!mb-0"> انشاء منتج</h5>
+      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
+        <h5 className="!mb-0 text-xl font-semibold text-[#011957] dark:text-white">
+          انشاء منتج
+        </h5>
 
-        <ol className="breadcrumb mt-[12px] md:mt-0 rtl:flex-row-reverse">
-          <li className="breadcrumb-item inline-block relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
+        <ol className="breadcrumb flex gap-2 mt-2 md:mt-0 text-sm text-gray-600 dark:text-gray-300">
+          <li>
             <Link
               href="/dashboard"
-              className="inline-block relative ltr:pl-[22px] rtl:pr-[22px] transition-all hover:text-primary-500"
+              className="inline-flex items-center text-[#6043FD] hover:text-[#9861FB] transition"
             >
-              <i className="material-symbols-outlined absolute ltr:left-0 rtl:right-0 !text-lg -mt-px text-primary-500 top-1/2 -translate-y-1/2">
-                home
-              </i>
+              <i className="material-symbols-outlined !text-lg mr-1">home</i>
               رئيسية
             </Link>
           </li>
-          <li className="breadcrumb-item inline-block  relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
-            المنتجات
-          </li>
-          <li className="breadcrumb-item inline-block  relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
-            انشاء منتج
-          </li>
+          <li>/</li>
+          <li>المنتجات</li>
+          <li>/</li>
+          <li className="text-gray-500 dark:text-gray-400">انشاء منتج</li>
         </ol>
       </div>
+
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className=" gap-[25px]">
+        <div className="gap-6">
           <div className="lg:col-span-2">
-            <div className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md">
-              <div className="trezo-card-header mb-[20px] md:mb-[25px] flex items-center justify-between">
-                <div className="trezo-card-title">
-                  <h5 className="!mb-0">أضف منتج</h5>
-                </div>
+            <div className="trezo-card bg-[#F7F7F7] dark:bg-[#0c1427] mb-6 p-6 rounded-lg shadow">
+              <div className="trezo-card-header mb-6 flex items-center justify-between">
+                <h5 className="!mb-0 text-lg font-semibold text-[#011957] dark:text-white">
+                  أضف منتج
+                </h5>
               </div>
 
               <div className="trezo-card-content">
-                {/* Title Field - Required */}
-                <div className="mb-[25px]">
-                  <label className="mb-[10px] text-black dark:text-white font-medium block">
-                    عنوان المنتج الرئيسي <span className="text-red-500">*</span>
+                {/* Title Field */}
+                <div className="mb-6">
+                  <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                    عنوان المنتج الرئيسي{" "}
+                    <span className="text-[#E10E0E]">*</span>
                   </label>
                   <input
                     type="text"
-                    className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
+                    className="h-[55px] rounded-md border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
                     placeholder="عنوان المنتج الرئيسي (مطلوب)"
                     id="title"
                     {...register("title", {
                       required: "يجب إدخال عنوان المنتج",
-                      maxLength: {
-                        value: 200,
-                        message: "يجب ألا يزيد العنوان عن 200 حرف",
-                      },
+                      maxLength: { value: 200, message: "الحد الأقصى 200 حرف" },
                     })}
                   />
                   {errors?.title?.message && (
-                    <span className="text-red-700 text-sm">
+                    <span className="text-[#E10E0E] text-sm">
                       {errors.title.message}
                     </span>
                   )}
                 </div>
 
-                <div className="sm:grid sm:grid-cols-2 sm:gap-[25px]">
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
+                {/* Fields */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Name AR */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
                       اسم المنتج (بالعربي)
                     </label>
                     <input
                       type="text"
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                      placeholder="يجب الايزيد عن 100 حرف"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-[#F3EBFF] dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                      placeholder="بحد أقصى 100 حرف"
                       id="name_ar"
-                      {...register("name_ar", {
-                        maxLength: {
-                          value: 100,
-                          message: "يجب ألا يزيد عن 100 حرف",
-                        },
-                      })}
+                      {...register("name_ar")}
                     />
-                    {errors?.name_ar?.message && (
-                      <span className="text-red-700 text-sm">
-                        {errors.name_ar.message}
-                      </span>
-                    )}
                   </div>
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
+
+                  {/* Name EN */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
                       اسم المنتج (بالانجليزي)
                     </label>
                     <input
                       type="text"
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                      placeholder="يجب الايزيد عن 100 حرف"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-[#F3EBFF] dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                      placeholder="بحد أقصى 100 حرف"
                       id="name_en"
-                      {...register("name_en", {
-                        required: "يجب ادخال اسم المنتج",
-                        max: {
-                          value: 100,
-                          message: "يجب الايزيد عن 100 حرف",
-                        },
-                      })}
+                      {...register("name_en")}
                     />
-                    {errors?.name_en?.message && (
-                      <span className="text-red-700 text-sm">
-                        {errors.name_en.message}
-                      </span>
-                    )}
                   </div>
 
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
+                  {/* Category */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
                       التصنيف
                     </label>
                     <select
-                      className="h-[55px] rounded-md border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[13px] block w-full outline-0 cursor-pointer transition-all focus:border-primary-500"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-[#F3EBFF] dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
                       {...register("category_id")}
                       onChange={handleCategoryChange}
                     >
                       <option value="">اختر التصنيف</option>
-                      {categories?.map((category) => (
-                        <option
-                          key={category.id}
-                          value={category.id.toString()}
-                        >
-                          {category.name_ar}
+                      {categories?.map((cat) => (
+                        <option key={cat.id} value={cat.id.toString()}>
+                          {cat.name_ar}
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
+                  {/* Price */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
                       السعر الأساسي
                     </label>
                     <input
                       type="number"
                       step="0.01"
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
                       placeholder="0.00"
                       id="price"
-                      {...register("price", {
-                        required: "يجب ادخال السعر",
-                        min: {
-                          value: 0,
-                          message: "السعر يجب أن يكون أكبر من 0",
-                        },
-                      })}
+                      {...register("price")}
                     />
-                    {errors?.price?.message && (
-                      <span className="text-red-700 text-sm">
-                        {errors.price.message}
-                      </span>
-                    )}
                   </div>
 
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
+                  {/* Offer Price */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
                       سعر العرض (اختياري)
                     </label>
                     <input
                       type="number"
                       step="0.01"
                       min="0"
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
                       placeholder="اتركه فارغاً إذا لم يكن هناك خصم"
                       id="offer_price"
-                      {...register("offer_price", {
-                        min: {
-                          value: 0,
-                          message: "سعر العرض يجب أن يكون أكبر من أو يساوي 0",
-                        },
-                        validate: (value) => {
-                          if (value && value <= 0) {
-                            return "سعر العرض يجب أن يكون أكبر من 0";
-                          }
-                          return true;
-                        },
-                      })}
+                      {...register("offer_price")}
                     />
-                    {errors?.offer_price?.message && (
-                      <span className="text-red-700 text-sm">
-                        {errors.offer_price.message}
-                      </span>
-                    )}
                   </div>
 
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
+                  {/* Stock */}
+                  <div>
+                    <label className="mb-2 text-[#011957] dark:text-white font-medium block">
                       المخزون
                     </label>
                     <input
                       type="number"
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
+                      className="h-[55px] rounded-md border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
                       placeholder="0"
                       id="stock_quantity"
-                      {...register("stock_quantity", {
-                        required: "يجب ادخال المخزون",
-                        min: {
-                          value: 0,
-                          message: "المخزون يجب أن يكون أكبر من أو يساوي 0",
-                        },
-                      })}
+                      {...register("stock_quantity")}
                     />
-                    {errors?.stock_quantity?.message && (
-                      <span className="text-red-700 text-sm">
-                        {errors.stock_quantity.message}
-                      </span>
-                    )}
                   </div>
+                </div>
 
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      أفضل مبيع
-                    </label>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="is_best_seller"
-                        className="w-4 h-4 text-primary-500 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        {...register("is_best_seller")}
-                      />
-                      <label
-                        htmlFor="is_best_seller"
-                        className="mr-2 text-sm text-gray-700 dark:text-gray-300"
-                      >
-                        تحديد كأفضل مبيع
-                      </label>
-                    </div>
-                  </div>
+                {/* Description - AR */}
+                <div className="mt-6">
+                  <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                    وصف المنتج (بالعربية)
+                  </label>
+                  <EditorProvider>
+                    <Toolbar>
+                      <BtnBold />
+                      <BtnItalic />
+                      <BtnUnderline />
+                      <BtnStrikeThrough />
+                      <Separator />
+                      <BtnBulletList />
+                      <BtnNumberedList />
+                      <Separator />
+                      <BtnLink />
+                      <Separator />
+                      <BtnUndo />
+                      <BtnRedo />
+                      <Separator />
+                      <BtnStyles />
+                      <HtmlButton />
+                    </Toolbar>
+                    <Editor
+                      value={editorAr}
+                      onChange={(e) => setEditorAr(e.target.value)}
+                      containerProps={{
+                        style: {
+                          borderColor: "#BA6FEE",
+                          background: "#F9F6FF",
+                          color: "#011957",
+                        },
+                      }}
+                    />
+                  </EditorProvider>
+                </div>
 
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      عرض محدود
-                    </label>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="limited_time_offer"
-                        className="w-4 h-4 text-primary-500 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        {...register("limited_time_offer")}
-                      />
-                      <label
-                        htmlFor="limited_time_offer"
-                        className="mr-2 text-sm text-gray-700 dark:text-gray-300"
-                      >
-                        تحديد كعرض محدود
-                      </label>
-                    </div>
-                  </div>
+                {/* Description - EN */}
+                <div className="mt-6">
+                  <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                    Product Description (English)
+                  </label>
+                  <EditorProvider>
+                    <Toolbar>
+                      <BtnBold />
+                      <BtnItalic />
+                      <BtnUnderline />
+                      <BtnStrikeThrough />
+                      <Separator />
+                      <BtnBulletList />
+                      <BtnNumberedList />
+                      <Separator />
+                      <BtnLink />
+                      <Separator />
+                      <BtnUndo />
+                      <BtnRedo />
+                      <Separator />
+                      <BtnStyles />
+                      <HtmlButton />
+                    </Toolbar>
+                    <Editor
+                      value={editorEn}
+                      onChange={(e) => setEditorEn(e.target.value)}
+                      containerProps={{
+                        style: {
+                          borderColor: "#BA6FEE",
+                          background: "#F9F6FF",
+                          color: "#011957",
+                        },
+                      }}
+                    />
+                  </EditorProvider>
+                </div>
 
-                  <div className="sm:col-span-2 mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      وصف المنتج (بالعربي)
-                    </label>
-                    <EditorProvider>
-                      <Editor
-                        value={editorAr}
-                        onChange={(e) => {
-                          setEditorAr(e.target.value);
-                          setValue("description_ar", e.target.value, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                          });
-                        }}
-                        style={{ minHeight: "200px" }}
-                        className="rsw-editor"
-                      >
-                        <Toolbar>
-                          <BtnUndo />
-                          <BtnRedo />
-                          <Separator />
-                          <BtnBold />
-                          <BtnItalic />
-                          <BtnUnderline />
-                          <BtnStrikeThrough />
-                          <Separator />
-                          <BtnNumberedList />
-                          <BtnBulletList />
-                          <Separator />
-                          <BtnLink />
-                          <BtnClearFormatting />
-                          <HtmlButton />
-                          <Separator />
-                          <BtnStyles />
-                        </Toolbar>
-                      </Editor>
-                    </EditorProvider>
-                  </div>
-
-                  <div className="sm:col-span-2 mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      وصف المنتج (بالانجليزي)
-                    </label>
-                    <EditorProvider>
-                      <Editor
-                        value={editorEn}
-                        onChange={(e) => {
-                          setEditorEn(e.target.value);
-                          setValue("description_en", e.target.value, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                          });
-                        }}
-                        style={{ minHeight: "200px" }}
-                        className="rsw-editor"
-                      >
-                        <Toolbar>
-                          <BtnUndo />
-                          <BtnRedo />
-                          <Separator />
-                          <BtnBold />
-                          <BtnItalic />
-                          <BtnUnderline />
-                          <BtnStrikeThrough />
-                          <Separator />
-                          <BtnNumberedList />
-                          <BtnBulletList />
-                          <Separator />
-                          <BtnLink />
-                          <BtnClearFormatting />
-                          <HtmlButton />
-                          <Separator />
-                          <BtnStyles />
-                        </Toolbar>
-                      </Editor>
-                    </EditorProvider>
-                  </div>
-
-                  <div className="sm:col-span-2 mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      صور المنتج
-                    </label>
-
-                    <div id="fileUploader">
-                      <div className="relative flex items-center justify-center overflow-hidden rounded-md py-[88px] px-[20px] border border-gray-200 dark:border-[#172036]">
-                        <div className="flex flex-col items-center justify-center text-center">
-                          <div className="w-[35px] h-[35px] border border-gray-100 dark:border-[#15203c] flex items-center justify-center rounded-md text-primary-500 text-lg mb-3">
-                            <i className="ri-upload-2-line"></i>
-                          </div>
-                          <p className="leading-[1.5] mb-2">
-                            <strong className="text-black dark:text-white">
-                              اضغط لرفع
-                            </strong>
-                            <br /> صور المنتج من هنا
-                          </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            يمكنك رفع حتى 5 صور، حجم كل صورة: حتى 50 ميجابايت
-                          </p>
-                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                            {selectedImages.length}/5 صور مختارة
-                          </p>
-                        </div>
-
-                        <input
-                          type="file"
-                          id="images"
-                          accept="image/*"
-                          multiple
-                          className="absolute top-0 left-0 right-0 bottom-0 rounded-md z-[1] opacity-0 cursor-pointer"
-                          onChange={handleFileChange}
-                        />
-                        {errors?.images?.message && (
-                          <span className="text-red-700 text-sm">
-                            {errors.images.message}
-                          </span>
-                        )}
+                {/* Upload Box */}
+                <div className="mt-6">
+                  <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+                    صور المنتج
+                  </label>
+                  <div className="relative flex items-center justify-center rounded-md py-16 px-4 border-2 border-dashed border-[#BA6FEE] bg-[#F9F6FF] dark:bg-[#1a1a33]">
+                    <div className="text-center">
+                      <div className="w-[35px] h-[35px] border border-gray-100 dark:border-[#15203c] flex items-center justify-center rounded-md text-primary-500 text-lg ltr:mr-[12px] rtl:ml-[12px]">
+                        <i className="ri-upload-2-line"></i>
                       </div>
-
-                      {/* Images Preview */}
-                      {selectedImages.length > 0 && (
-                        <div className="mt-[15px]">
-                          <div className="flex items-center justify-between mb-3">
-                            <h6 className="text-black dark:text-white font-medium">
-                              الصور المختارة ({selectedImages.length})
-                            </h6>
-                            <button
-                              type="button"
-                              onClick={handleRemoveAllImages}
-                              className="text-red-500 hover:text-red-700 text-sm"
-                            >
-                              حذف الكل
-                            </button>
-                          </div>
-
-                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                            {selectedImages.map((image, index) => (
-                              <div key={index} className="relative group">
-                                <div className="relative w-full h-[100px] rounded-md overflow-hidden border border-gray-200 dark:border-[#172036]">
-                                  <Image
-                                    src={URL.createObjectURL(image)}
-                                    alt={`product-preview-${index}`}
-                                    fill
-                                    className="object-cover"
-                                  />
-                                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center">
-                                    <button
-                                      type="button"
-                                      className="opacity-0 group-hover:opacity-100 bg-red-500 text-white w-[25px] h-[25px] flex items-center justify-center rounded-full text-xs transition-all duration-200 hover:bg-red-600"
-                                      onClick={() => handleRemoveImage(index)}
-                                    >
-                                      ✕
-                                    </button>
-                                  </div>
-                                </div>
-                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 truncate">
-                                  {image.name}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                      <p className="text-[#011957] dark:text-white">
+                        <strong>اضغط لرفع</strong> صور المنتج
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        يمكنك رفع حتى 5 صور (50MB لكل صورة)
+                      </p>
                     </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      onChange={handleFileChange}
+                    />
                   </div>
                 </div>
               </div>
@@ -627,46 +466,23 @@ const CreateProductForm: React.FC = () => {
           </div>
         </div>
 
-        <div className="trezo-card mb-[25px]">
-          <div className="trezo-card-content">
-            <button
-              type="reset"
-              className="font-medium inline-block transition-all rounded-md md:text-md ltr:mr-[15px] rtl:ml-[15px] py-[10px] md:py-[12px] px-[20px] md:px-[22px] bg-danger-500 text-white hover:bg-danger-400"
-            >
-              ألغاء
-            </button>
+        {/* Buttons */}
+        <div className="flex gap-3 pb-6">
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard/news")}
+            className="py-3 px-6 rounded-lg bg-[#E10E0E] text-white font-medium shadow hover:bg-red-600 transition"
+          >
+            إلغاء
+          </button>
 
-            <button
-              type="submit"
-              disabled={isPending || isUploadingImages}
-              className="font-medium inline-block transition-all rounded-md md:text-md py-[10px] md:py-[12px] px-[20px] md:px-[22px] bg-primary-500 text-white hover:bg-primary-400 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span className="inline-block relative ltr:pl-[29px] rtl:pr-[29px]">
-                {isUploadingImages ? (
-                  <>
-                    <i className="material-symbols-outlined ltr:left-0 rtl:right-0 absolute top-1/2 -translate-y-1/2 animate-spin">
-                      sync
-                    </i>
-                    جاري رفع الصور...
-                  </>
-                ) : isPending ? (
-                  <>
-                    <i className="material-symbols-outlined ltr:left-0 rtl:right-0 absolute top-1/2 -translate-y-1/2 animate-spin">
-                      sync
-                    </i>
-                    جاري الإنشاء...
-                  </>
-                ) : (
-                  <>
-                    <i className="material-symbols-outlined ltr:left-0 rtl:right-0 absolute top-1/2 -translate-y-1/2">
-                      add
-                    </i>
-                    انشاء منتج
-                  </>
-                )}
-              </span>
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={isPending || isUploadingImages}
+            className="py-3 px-6 rounded-lg bg-[#6043FD] hover:bg-[#9861FB] text-white font-medium shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isPending || isUploadingImages ? "جاري المعالجة..." : "إنشاء منتج"}
+          </button>
         </div>
       </form>
     </>
