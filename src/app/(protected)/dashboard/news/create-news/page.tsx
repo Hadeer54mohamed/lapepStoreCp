@@ -7,7 +7,6 @@ import {
   EditorProvider,
   BtnBold,
   BtnBulletList,
-  BtnClearFormatting,
   BtnItalic,
   BtnLink,
   BtnNumberedList,
@@ -32,7 +31,6 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { UUID } from "crypto";
 
-import Image from "next/image";
 import Link from "next/link";
 
 type ProductFormValues = {
@@ -460,6 +458,43 @@ const CreateProductForm: React.FC = () => {
                       onChange={handleFileChange}
                     />
                   </div>
+
+                  {/* Show selected images */}
+                  {selectedImages.length > 0 && (
+                    <div className="mt-4 space-y-4">
+                      {/* الصور */}
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {selectedImages.map((file, index) => (
+                          <div key={index} className="relative group">
+                            <img
+                              src={URL.createObjectURL(file)}
+                              alt={`صورة ${index + 1}`}
+                              className="w-full h-32 object-cover rounded-md border"
+                            />
+                            {/* Remove single image */}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveImage(index)}
+                              className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded opacity-90 group-hover:opacity-100"
+                            >
+                              حذف
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* أزرار التحكم */}
+                      <div className="flex justify-end gap-3">
+                        <button
+                          type="button"
+                          onClick={handleRemoveAllImages}
+                          className="bg-gray-200 hover:bg-gray-300 text-sm px-3 py-1 rounded"
+                        >
+                          حذف كل الصور
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
