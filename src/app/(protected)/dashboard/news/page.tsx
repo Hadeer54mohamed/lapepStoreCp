@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   deleteProduct,
   getProducts,
@@ -12,20 +13,46 @@ import { getCategories } from "../../../../../services/apiCategories";
 import toast from "react-hot-toast";
 
 const ProductListTable: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
-  const [dateFilter, setDateFilter] = useState<string>("");
-  const [bestSellerFilter, setBestSellerFilter] = useState<string>("");
-  const [limitedTimeOfferFilter, setLimitedTimeOfferFilter] =
-    useState<string>("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    searchParams.get("category") || ""
+  );
+  const [searchQuery, setSearchQuery] = useState<string>(
+    searchParams.get("search") || ""
+  );
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
+  const [dateFilter, setDateFilter] = useState<string>(
+    searchParams.get("date") || ""
+  );
+  const [bestSellerFilter, setBestSellerFilter] = useState<string>(
+    searchParams.get("bestSeller") || ""
+  );
+  const [limitedTimeOfferFilter, setLimitedTimeOfferFilter] = useState<string>(
+    searchParams.get("limited") || ""
+  );
+
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get("page")) || 1
+  );
   const pageSize = 10;
+
+  // 🟣 تحديث الـ URL عند تغيير أي فلتر
+  const updateUrlParams = (key: string, value: string) => {
+    const params = new URLSearchParams(window.location.search);
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    router.replace(`${window.location.pathname}?${params.toString()}`);
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery);
+      updateUrlParams("search", searchQuery);
     }, 500);
     return () => clearTimeout(timer);
   }, [searchQuery]);
@@ -142,102 +169,116 @@ const ProductListTable: React.FC = () => {
       <div className="trezo-card bg-white dark:bg-[#0c1427] shadow-md mb-6 p-5 rounded-lg">
         {/* Add Button */}
         <div className="flex justify-between items-center mb-6">
-  <Link
-    href="/dashboard/news/create-news/"
-    className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-gradient-to-r from-[#6043FD] to-[#9861FB] text-white font-medium hover:from-[#5033e0] hover:to-[#8750e0] transition shadow"
-  >
-    <i className="material-symbols-outlined !text-[22px]">add</i>
-    <span>أضف منتج جديد</span>
-  </Link>
-</div>
-
+          <Link
+            href="/dashboard/news/create-news/"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-gradient-to-r from-[#6043FD] to-[#9861FB] text-white font-medium hover:from-[#5033e0] hover:to-[#8750e0] transition shadow"
+          >
+            <i className="material-symbols-outlined !text-[22px]">add</i>
+            <span>أضف منتج جديد</span>
+          </Link>
+        </div>
 
         {/* Filters */}
         <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-[#011957] dark:text-white bg-gradient-to-r from-[#6043FD] via-[#9861FB] to-[#BA6FEE] dark:from-[#15203c] dark:via-[#1e2a4a] dark:to-[#011957] p-6 rounded-lg shadow-md">
-  {/* Search */}
-  <div className="relative">
-    <label className="block mb-2 text-sm font-medium text-white">
-      بحث
-    </label>
-    <input
-      type="text"
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-      placeholder="ابحث عن منتج..."
-      className="w-full p-2 pr-10 border rounded-lg outline-none text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] placeholder-gray-500 hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
-    />
-    <i className="material-symbols-outlined absolute right-3 top-9 text-[#6043FD] dark:text-[#BA6FEE]">
-      search
-    </i>
-  </div>
+          {/* Search */}
+          <div className="relative">
+            <label className="block mb-2 text-sm font-medium text-white">
+              بحث
+            </label>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+              }}
+              placeholder="ابحث عن منتج..."
+              className="w-full p-2 pr-10 border rounded-lg outline-none text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] placeholder-gray-500 hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
+            />
+            <i className="material-symbols-outlined absolute right-3 top-9 text-[#6043FD] dark:text-[#BA6FEE]">
+              search
+            </i>
+          </div>
 
-  {/* Dropdowns */}
-  <div>
-    <label className="block mb-2 text-sm font-medium text-white">
-      التاريخ
-    </label>
-    <select
-      value={dateFilter}
-      onChange={(e) => setDateFilter(e.target.value)}
-      className="w-full p-2 border rounded-lg text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
-    >
-      <option value="">كل التواريخ</option>
-      <option value="today">اليوم</option>
-      <option value="week">هذا الأسبوع</option>
-      <option value="month">هذا الشهر</option>
-      <option value="year">هذا العام</option>
-    </select>
-  </div>
+          {/* Dropdowns */}
+          <div>
+            <label className="block mb-2 text-sm font-medium text-white">
+              التاريخ
+            </label>
+            <select
+              value={dateFilter}
+              onChange={(e) => {
+                setDateFilter(e.target.value);
+                updateUrlParams("date", e.target.value);
+              }}
+              className="w-full p-2 border rounded-lg text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
+            >
+              <option value="">كل التواريخ</option>
+              <option value="today">اليوم</option>
+              <option value="week">هذا الأسبوع</option>
+              <option value="month">هذا الشهر</option>
+              <option value="year">هذا العام</option>
+            </select>
+          </div>
 
-  <div>
-    <label className="block mb-2 text-sm font-medium text-white">
-      التصنيف
-    </label>
-    <select
-      value={selectedCategory}
-      onChange={(e) => setSelectedCategory(e.target.value)}
-      className="w-full p-2 border rounded-lg text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
-    >
-      <option value="">جميع التصنيفات</option>
-      {Object.entries(categoriesMap).map(([id, name]) => (
-        <option key={id} value={id}>
-          {name}
-        </option>
-      ))}
-    </select>
-  </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-white">
+              التصنيف
+            </label>
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                updateUrlParams("category", e.target.value);
+              }}
+              className="w-full p-2 border rounded-lg text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
+            >
+              <option value="">جميع التصنيفات</option>
+              {Object.entries(categoriesMap).map(([id, name]) => (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-  <div>
-    <label className="block mb-2 text-sm font-medium text-white">
-      أفضل مبيع
-    </label>
-    <select
-      value={bestSellerFilter}
-      onChange={(e) => setBestSellerFilter(e.target.value)}
-      className="w-full p-2 border rounded-lg text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
-    >
-      <option value="">جميع المنتجات</option>
-      <option value="true">أفضل مبيع</option>
-      <option value="false">غير أفضل مبيع</option>
-    </select>
-  </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-white">
+              أفضل مبيع
+            </label>
+            <select
+              value={bestSellerFilter}
+              onChange={(e) => {
+                setBestSellerFilter(e.target.value);
+                updateUrlParams("bestSeller", e.target.value);
+              }}
+              className="w-full p-2 border rounded-lg text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
+            >
+              <option value="">جميع المنتجات</option>
+              <option value="true">أفضل مبيع</option>
+              <option value="false">غير أفضل مبيع</option>
+            </select>
+          </div>
 
-  <div>
-    <label className="block mb-2 text-sm font-medium text-white">
-      عرض محدود
-    </label>
-    <select
-      value={limitedTimeOfferFilter}
-      onChange={(e) => setLimitedTimeOfferFilter(e.target.value)}
-      className="w-full p-2 border rounded-lg text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
-    >
-      <option value="">جميع المنتجات</option>
-      <option value="true">عرض محدود</option>
-      <option value="false">غير عرض محدود</option>
-    </select>
-  </div>
-</div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-white">
+              عرض محدود
+            </label>
+            <select
+              value={limitedTimeOfferFilter}
+              onChange={(e) => {
+                setLimitedTimeOfferFilter(e.target.value);
+                updateUrlParams("limited", e.target.value);
+              }}
+              className="w-full p-2 border rounded-lg text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
+            >
+              <option value="">جميع المنتجات</option>
+              <option value="true">عرض محدود</option>
+              <option value="false">غير عرض محدود</option>
+            </select>
+          </div>
+        </div>
 
+        
 
         {/* Table */}
         <div className="overflow-x-auto">

@@ -135,7 +135,7 @@ const OrderDetailsPage: React.FC = () => {
     <>
      {/* Breadcrumb */}
      <div className="mb-[25px] md:flex items-center justify-between">
-        <h5 className="!mb-0 text-[#6043FD]">تفاصيل الطلب #{order.id?.slice(0, 8)}</h5>
+        <h5 className="!mb-0 text-[#6043FD]" > تفاصيل الطلب {order.id}</h5>
         <ol className="breadcrumb mt-[12px] md:mt-0 rtl:flex-row-reverse">
           <li className="breadcrumb-item inline-block relative text-sm mx-[11px]">
             <Link
