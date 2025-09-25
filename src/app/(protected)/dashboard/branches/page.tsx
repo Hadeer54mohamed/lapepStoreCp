@@ -212,126 +212,159 @@ const BranchesList: React.FC = () => {
   );
 
   return (
-    <div className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md">
-      <div className="trezo-tabs branches-tabs">
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-[20px] md:mb-[25px] gap-4">
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <div className="relative flex-1 sm:flex-none">
-              <input
-                type="text"
-                placeholder="ابحث عن فرع..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-[#15203c] dark:text-white"
-              />
-              <i className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                search
-              </i>
-            </div>
-          </div>
+    <>
+      {/* Title + Breadcrumb */}
+      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
+        <h5 className="!mb-0 text-xl font-semibold text-[#011957] dark:text-white">
+          إدارة الفروع
+        </h5>
+
+        <ol className="breadcrumb flex gap-2 mt-2 md:mt-0 text-sm text-gray-600 dark:text-gray-300">
+          <li>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center text-[#6043FD] hover:text-[#9861FB] transition"
+            >
+              <i className="material-symbols-outlined !text-lg mr-1">home</i>
+              رئيسية
+            </Link>
+          </li>
+          <li>/</li>
+          <li className="text-gray-500 dark:text-gray-400">الفروع</li>
+        </ol>
+      </div>
+
+      <div className="trezo-card bg-[#F7F7F7] dark:bg-[#0c1427] mb-6 p-6 rounded-lg shadow">
+        {/* Add Button */}
+        <div className="flex justify-between items-center mb-6">
+          <h5 className="!mb-0 text-lg font-semibold text-[#011957] dark:text-white">
+            قائمة الفروع
+          </h5>
           <Link
             href="/dashboard/branches/create-branch"
-            className="inline-block transition-all rounded-md font-medium px-[13px] py-[6px] text-primary-500 border border-primary-500 hover:bg-primary-500 hover:text-white"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-gradient-to-r from-[#6043FD] to-[#9861FB] text-white font-medium hover:from-[#5033e0] hover:to-[#8750e0] transition shadow"
           >
-            <span className="relative pl-6">
-              <i className="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2">
-                add
-              </i>
-              أضف فرع جديد
-            </span>
+            <i className="material-symbols-outlined !text-[22px]">add</i>
+            <span>أضف فرع جديد</span>
           </Link>
         </div>
 
-        <div className="table-responsive overflow-x-auto">
-          <table className="w-full">
-            <thead className="text-black dark:text-white text-end">
+        {/* Filters */}
+        <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 text-[#011957] dark:text-white bg-gradient-to-r from-[#6043FD] via-[#9861FB] to-[#BA6FEE] dark:from-[#15203c] dark:via-[#1e2a4a] dark:to-[#011957] p-6 rounded-lg shadow-md">
+          {/* Search */}
+          <div className="relative">
+            <label className="block mb-2 text-sm font-medium text-white">
+              بحث
+            </label>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="ابحث عن فرع..."
+              className="w-full p-2 pr-10 border rounded-lg outline-none text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] placeholder-gray-500 hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
+            />
+            <i className="material-symbols-outlined absolute right-3 top-9 text-[#6043FD] dark:text-[#BA6FEE]">
+              search
+            </i>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-base">
+            <thead className="text-[#011957] dark:text-white bg-[#F3EBFF] dark:bg-[#15203c]">
               <tr>
-                {[
-                  "اسم الفرع",
-                  "المنطقة",
-                  "الصوره",
-                  "رقم الهاتف",
-                  "التاريخ",
-                  "أجرأت",
-                ].map((head, i) => (
-                  <th
-                    key={i}
-                    className="font-medium ltr:text-left rtl:text-right px-[20px] py-[11px] bg-gray-50 dark:bg-[#15203c]"
-                  >
-                    {head}
-                  </th>
-                ))}
+                <th className="font-medium px-4 py-3 text-center">اسم الفرع</th>
+                <th className="font-medium px-4 py-3 text-center hidden md:table-cell">المنطقة</th>
+                <th className="font-medium px-4 py-3 text-center">الصورة</th>
+                <th className="font-medium px-4 py-3 text-center hidden md:table-cell">رقم الهاتف</th>
+                <th className="font-medium px-4 py-3 text-center hidden md:table-cell">التاريخ</th>
+                <th className="font-medium px-4 py-3 text-center">الإجراءات</th>
               </tr>
             </thead>
             <tbody>
-              {paginatedBranches.map((branch) => (
-                <tr
-                  key={branch.id}
-                  className="border-t border-gray-100 dark:border-gray-800"
-                >
-                  <td className="py-3 px-3 font-semibold">
-                    <div>
-                      <div className="font-bold">{branch.name_ar}</div>
-                      <div className="text-sm text-gray-500">
-                        {branch.name_en}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-3 px-3">
-                    <div>
-                      <div className="font-medium">{branch.area_ar}</div>
-                      <div className="text-sm text-gray-500">
-                        {branch.area_en}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-3 px-3">
-                    {branch.image ? (
-                      <Image
-                        src={branch.image}
-                        alt={branch.name_ar}
-                        width={60}
-                        height={40}
-                        className="rounded"
-                      />
-                    ) : (
-                      <div className="w-[60px] h-[40px] bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center text-gray-400 text-xs">
-                        لا توجد صورة
-                      </div>
-                    )}
-                  </td>
-                  <td className="py-3 px-3">{branch.phone || "غير محدد"}</td>
-                  <td className="py-3 px-3">
-                    {new Date(branch.created_at).toLocaleDateString("ar-EG")}
-                  </td>
-                  <td className="py-3 px-3">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEditClick(branch)}
-                        className="text-primary-500 leading-none"
-                      >
-                        <i className="material-symbols-outlined !text-md">
-                          edit
-                        </i>
-                      </button>
-                      <button
-                        onClick={() => handleDeleteBranch(branch.id)}
-                        className="text-danger-500 leading-none"
-                      >
-                        <i className="material-symbols-outlined !text-md">
-                          delete
-                        </i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {paginatedBranches.length === 0 && (
+              {paginatedBranches.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-5 text-center text-gray-400">
-                    لا توجد فروع.
+                  <td colSpan={6} className="text-center py-8 text-gray-500">
+                    لا توجد فروع متاحة
                   </td>
                 </tr>
+              ) : (
+                paginatedBranches.map((branch) => (
+                  <tr
+                    key={branch.id}
+                    className="border-b border-gray-100 dark:border-[#172036] hover:bg-[#F9F6FF] dark:hover:bg-[#1c2540] transition"
+                  >
+                    {/* اسم الفرع */}
+                    <td className="text-center md:ltr:text-left md:rtl:text-right whitespace-nowrap px-[20px] py-[15px] border-b border-gray-100 dark:border-[#172036] ltr:first:border-l ltr:last:border-r rtl:first:border-r rtl:last:border-l">
+                      <div className="flex flex-col items-center justify-center md:justify-start text-black dark:text-white transition-all hover:text-primary-500">
+                        <div className="font-bold text-center md:text-start">{branch.name_ar}</div>
+                        <div className="text-sm text-gray-500 text-center md:text-start">
+                          {branch.name_en}
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* المنطقة */}
+                    <td className="px-4 py-3 align-middle text-gray-700 dark:text-gray-300 text-center hidden md:table-cell">
+                      <div>
+                        <div className="font-medium">{branch.area_ar}</div>
+                        <div className="text-sm text-gray-500">
+                          {branch.area_en}
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* الصورة */}
+                    <td className="px-4 py-3 align-middle text-center">
+                      {branch.image ? (
+                        <Image
+                          src={branch.image}
+                          alt={branch.name_ar}
+                          width={60}
+                          height={40}
+                          className="rounded-md object-cover mx-auto"
+                        />
+                      ) : (
+                        <div className="w-[60px] h-[40px] bg-[#F9F6FF] dark:bg-[#1a1a33] rounded-md flex items-center justify-center text-[#6043FD] text-xs border border-[#BA6FEE] mx-auto">
+                          لا توجد صورة
+                        </div>
+                      )}
+                    </td>
+
+                    {/* رقم الهاتف */}
+                    <td className="px-4 py-3 align-middle text-gray-600 dark:text-gray-300 text-center hidden md:table-cell">
+                      {branch.phone || "غير محدد"}
+                    </td>
+
+                    {/* التاريخ */}
+                    <td className="px-4 py-3 align-middle text-gray-600 dark:text-gray-300 text-center hidden md:table-cell">
+                      {new Date(branch.created_at).toLocaleDateString("ar-EG")}
+                    </td>
+
+                    {/* الإجراءات */}
+                    <td className="px-4 py-3 align-middle text-center">
+                      <div className="flex justify-center gap-3">
+                        <button
+                          onClick={() => handleEditClick(branch)}
+                          className="text-gray-500 hover:text-[#6043FD] transition"
+                        >
+                          <i className="material-symbols-outlined !text-[20px] font-normal">
+                            edit
+                          </i>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteBranch(branch.id)}
+                          className="text-gray-500 hover:text-red-500 transition"
+                        >
+                          <i className="material-symbols-outlined !text-[20px] font-normal">
+                            delete
+                          </i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
@@ -644,7 +677,7 @@ const BranchesList: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

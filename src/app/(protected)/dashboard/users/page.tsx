@@ -142,16 +142,16 @@ const UsersPage: React.FC = () => {
 
           {/* Date Filter */}
           <select
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-            className="w-full p-2 border transition border-[#f2f2f2] hover:bg-[#f2f2f2] rounded-lg outline-none dark:border-[#172036] dark:hover:bg-[#172036] dark:bg-[#0c1427] dark:text-white"
-          >
-            <option value="">كل التواريخ</option>
-            <option value="today">اليوم</option>
-            <option value="week">هذا الأسبوع</option>
-            <option value="month">هذا الشهر</option>
-            <option value="year">هذا العام</option>
-          </select>
+      value={dateFilter}
+      onChange={(e) => setDateFilter(e.target.value)}
+      className="w-full p-2 border rounded-lg text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
+    >
+      <option value="">كل التواريخ</option>
+      <option value="today">اليوم</option>
+      <option value="week">هذا الأسبوع</option>
+      <option value="month">هذا الشهر</option>
+      <option value="year">هذا العام</option>
+    </select>
         </div>
 
         <div className="trezo-card-content">

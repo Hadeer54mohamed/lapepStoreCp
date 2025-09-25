@@ -70,239 +70,230 @@ const TestimonialListTable: React.FC = () => {
 
   return (
     <>
-      <div className="mb-[25px] md:flex items-center justify-between">
-        <h5 className="!mb-0"> قائمة التوصيات</h5>
-
-        <ol className="breadcrumb mt-[12px] md:mt-0 rtl:flex-row-reverse">
-          <li className="breadcrumb-item inline-block relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
-            <Link
-              href="/dashboard"
-              className="inline-block relative ltr:pl-[22px] rtl:pr-[22px] transition-all hover:text-primary-500"
-            >
-              <i className="material-symbols-outlined absolute ltr:left-0 rtl:right-0 !text-lg -mt-px text-primary-500 top-1/2 -translate-y-1/2">
-                home
-              </i>
-              رئيسية
-            </Link>
-          </li>
-          <li className="breadcrumb-item inline-block  relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
-            التوصيات
-          </li>
-        </ol>
+    <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
+      <h5 className="!mb-0 text-xl font-semibold text-[#011957] dark:text-white">
+        قائمة التوصيات
+      </h5>
+  
+      <ol className="breadcrumb flex gap-2 mt-2 md:mt-0 text-sm text-gray-600 dark:text-gray-300">
+        <li>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center text-[#6043FD] hover:text-[#9861FB] transition"
+          >
+            <i className="material-symbols-outlined !text-lg mr-1">home</i>
+            رئيسية
+          </Link>
+        </li>
+        <li>/</li>
+        <li className="text-gray-500 dark:text-gray-400">التوصيات</li>
+      </ol>
+    </div>
+  
+    <div className="trezo-card bg-[#F7F7F7] dark:bg-[#0c1427] mb-6 p-6 rounded-lg shadow">
+      {/* Add Button */}
+      <div className="flex justify-between items-center mb-6">
+        <h5 className="!mb-0 text-lg font-semibold text-[#011957] dark:text-white">
+          إدارة التوصيات
+        </h5>
+        <Link
+          href="/dashboard/testimonial/create-testimonial/"
+          className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-gradient-to-r from-[#6043FD] to-[#9861FB] text-white font-medium hover:from-[#5033e0] hover:to-[#8750e0] transition shadow"
+        >
+          <i className="material-symbols-outlined !text-[22px]">add</i>
+          <span>أضف توصية جديدة</span>
+        </Link>
       </div>
-      <div className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md">
-        <div className="trezo-card-header mb-[20px] md:mb-[25px] sm:flex items-center justify-between">
-          <div className="trezo-card-subtitle mt-[15px] sm:mt-0">
-            <Link
-              href="/dashboard/testimonial/create-testimonial/"
-              className="inline-block transition-all rounded-md font-medium px-[13px] py-[6px] text-primary-500 border border-primary-500 hover:bg-primary-500 hover:text-white"
-            >
-              <span className="inline-block relative ltr:pl-[22px] rtl:pr-[22px]">
-                <i className="material-symbols-outlined !text-[22px] absolute ltr:-left-[4px] rtl:-right-[4px] top-1/2 -translate-y-1/2">
-                  add
-                </i>
-                أضف توصية جديدة
-              </span>
-            </Link>
-          </div>
+  
+      {/* Filters */}
+      <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 text-[#011957] dark:text-white bg-gradient-to-r from-[#6043FD] via-[#9861FB] to-[#BA6FEE] dark:from-[#15203c] dark:via-[#1e2a4a] dark:to-[#011957] p-6 rounded-lg shadow-md">
+        {/* Search Bar */}
+        <div className="relative">
+          <label className="block mb-2 text-sm font-medium text-white">
+            بحث
+          </label>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="ابحث عن توصية..."
+            className="w-full p-2 pr-10 border rounded-lg outline-none text-sm bg-[#F3EBFF] border-[#BA6FEE] text-[#011957] placeholder-gray-500 hover:border-[#9861FB] focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE] dark:bg-[#1e1a3c] dark:border-[#6043FD] dark:text-white"
+          />
+          <i className="material-symbols-outlined absolute right-3 top-9 text-[#6043FD] dark:text-[#BA6FEE]">
+            search
+          </i>
         </div>
-
-        <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Search Bar */}
-          <div className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ابحث عن توصية..."
-              className="w-full p-2 pr-10 border transition border-[#f2f2f2] hover:bg-[#f2f2f2] rounded-lg outline-none dark:border-[#172036] dark:hover:bg-[#172036] dark:bg-[#0c1427] dark:text-white"
-            />
-            <i className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-gray-500">
-              search
-            </i>
-          </div>
-
-          {/* Date Filter */}
+  
+        {/* Date Filter */}
+        <div>
+          <label className="block mb-2 text-sm font-medium text-white">
+            التاريخ
+          </label>
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="w-full p-2 border transition border-[#f2f2f2] hover:bg-[#f2f2f2] rounded-lg outline-none dark:border-[#172036] dark:hover:bg-[#172036] dark:bg-[#0c1427] dark:text-white"
+            className="w-full py-2 px-3 rounded-lg outline-none 
+              bg-gradient-to-r from-[#6043FD] to-[#9861FB] 
+              text-white font-medium shadow-md 
+              hover:from-[#5032e6] hover:to-[#874ff0] 
+              focus:ring-2 focus:ring-[#8b6fff] transition"
           >
-            <option value="">كل التواريخ</option>
-            <option value="today">اليوم</option>
-            <option value="week">هذا الأسبوع</option>
-            <option value="month">هذا الشهر</option>
-            <option value="year">هذا العام</option>
+            <option value="" className="bg-white text-[#011957]">
+              كل التواريخ
+            </option>
+            <option value="today" className="bg-white text-[#011957]">
+              اليوم
+            </option>
+            <option value="week" className="bg-white text-[#011957]">
+              هذا الأسبوع
+            </option>
+            <option value="month" className="bg-white text-[#011957]">
+              هذا الشهر
+            </option>
+            <option value="year" className="bg-white text-[#011957]">
+              هذا العام
+            </option>
           </select>
         </div>
-
-        <div className="trezo-card-content">
-          <div className="table-responsive overflow-x-auto">
-            <table className="w-full">
-              <thead className="text-black dark:text-white">
-                <tr>
-                  {["الصورة", "الاسم ", "تاريخ الانشاء", "الاجرائات"].map(
-                    (header) => (
-                      <th
-                        key={header}
-                        className="font-medium ltr:text-left rtl:text-right px-[20px] py-[11px] bg-gray-50 dark:bg-[#15203c] whitespace-nowrap ltr:first:rounded-tl-md ltr:last:rounded-tr-md rtl:first:rounded-tr-md rtl:last:rounded-tl-md"
+      </div>
+  
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse text-base">
+          <thead className="text-[#011957] dark:text-white bg-[#F3EBFF] dark:bg-[#15203c]">
+            <tr>
+              <th className="font-medium px-4 py-3 text-center">الصورة</th>
+              <th className="font-medium px-4 py-3 text-center">الاسم</th>
+              <th className="font-medium px-4 py-3 text-center hidden md:table-cell">
+                تاريخ الإنشاء
+              </th>
+              <th className="font-medium px-4 py-3 text-center">الإجراءات</th>
+            </tr>
+          </thead>
+  
+          <tbody>
+            {testimonials?.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="text-center py-8 text-gray-500">
+                  لا توجد توصيات متاحة
+                </td>
+              </tr>
+            ) : (
+              testimonials?.map((item) => (
+                <tr
+                  key={item.id}
+                  className="border-b border-gray-100 dark:border-[#172036] hover:bg-[#F9F6FF] dark:hover:bg-[#1c2540] transition"
+                >
+                  {/* الصورة */}
+                  <td className="text-center px-[20px] py-[15px]">
+                    <div className="relative w-[40px] h-[40px] mx-auto">
+                      <Image
+                        className="rounded-md object-cover w-full h-full"
+                        alt="testimonial-image"
+                        src={item?.image || "/placeholder.png"}
+                        width={40}
+                        height={40}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "/placeholder.png";
+                        }}
+                      />
+                    </div>
+                  </td>
+  
+                  {/* الاسم */}
+                  <td className="text-center px-[20px] py-[15px]">
+                    <span className="block text-[15px] font-medium">
+                      {item.name_ar?.length > 20
+                        ? item.name_ar.slice(0, 20) + "..."
+                        : item.name_ar}
+                    </span>
+                  </td>
+  
+                  {/* التاريخ */}
+                  <td className="px-4 py-3 align-middle text-gray-600 dark:text-gray-300 text-center hidden md:table-cell">
+                    {new Date(item.created_at as string).toLocaleDateString(
+                      "ar-EG",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )}
+                  </td>
+  
+                  {/* الإجراءات */}
+                  <td className="px-4 py-3 align-middle text-center">
+                    <div className="flex justify-center gap-3">
+                      <Link
+                        href={`/dashboard/testimonial/${item.id}`}
+                        className="text-gray-500 hover:text-[#6043FD] transition"
                       >
-                        {header}
-                      </th>
-                    )
-                  )}
+                        <i className="material-symbols-outlined !text-[20px] font-normal">
+                          edit
+                        </i>
+                      </Link>
+                      <button
+                        onClick={() => {
+                          console.log("Deleting ID:", item.id);
+                          mutate(item.id as string);
+                        }}
+                        disabled={isPending}
+                        className="text-gray-500 hover:text-red-500 transition"
+                      >
+                        <i className="material-symbols-outlined !text-[20px] font-normal">
+                          delete
+                        </i>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-
-              <tbody className="text-black dark:text-white">
-                {testimonials?.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="text-center py-8 text-gray-500">
-                      لا توجد توصيات متاحة
-                    </td>
-                  </tr>
-                ) : (
-                  testimonials?.map((item) => (
-                    <tr key={item.id}>
-                      <td className="ltr:text-left rtl:text-right whitespace-nowrap px-[20px] py-[15px] border-b border-gray-100 dark:border-[#172036] ltr:first:border-l ltr:last:border-r rtl:first:border-r rtl:last:border-l">
-                        <div className="flex items-center text-black dark:text-white transition-all hover:text-primary-500">
-                          <div className="relative w-[40px] h-[40px]">
-                            <Image
-                              className="rounded-md"
-                              alt="testimonial-image"
-                              src={item?.image || "/placeholder.png"}
-                              width={40}
-                              height={40}
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.src = "/placeholder.png";
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </td>
-
-                      <td className="ltr:text-left rtl:text-right whitespace-nowrap px-[20px] py-[15px] border-b border-gray-100 dark:border-[#172036] ltr:first:border-l ltr:last:border-r rtl:first:border-r rtl:last:border-l">
-                        <span className="block text-[15px] font-medium">
-                          {item.name_ar?.length > 20
-                            ? item.name_ar.slice(0, 20) + "..."
-                            : item.name_ar}
-                        </span>
-                      </td>
-
-                      {/* <td className="ltr:text-left rtl:text-right whitespace-nowrap px-[20px] py-[15px] border-b border-gray-100 dark:border-[#172036] ltr:first:border-l ltr:last:border-r rtl:first:border-r rtl:last:border-l">
-                        <span
-                          className="block text-[15px] font-medium"
-                          dangerouslySetInnerHTML={{
-                            __html:
-                              item.message_ar?.length > 30
-                                ? item.message_ar.slice(0, 30) + "..."
-                                : item.message_ar,
-                          }}
-                        />
-                      </td> */}
-
-                      <td className="ltr:text-left rtl:text-right whitespace-nowrap px-[20px] py-[15px] border-b border-gray-100 dark:border-[#172036] ltr:first:border-l ltr:last:border-r rtl:first:border-r rtl:last:border-l">
-                        {new Date(item.created_at as string).toLocaleDateString(
-                          "ar-EG",
-                          {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          }
-                        )}
-                      </td>
-
-                      <td className="ltr:text-left rtl:text-right whitespace-nowrap px-[20px] py-[15px] border-b border-gray-100 dark:border-[#172036] ltr:first:border-l ltr:last:border-r rtl:first:border-r rtl:last:border-l">
-                        <div className="flex items-center gap-[9px]">
-                          <div className="relative group">
-                            <Link
-                              href={`/dashboard/testimonial/${item.id}`}
-                              className="text-gray-500 leading-none"
-                              type="button"
-                            >
-                              <i className="material-symbols-outlined !text-md">
-                                edit
-                              </i>
-                            </Link>
-
-                            {/* Tooltip */}
-                            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              تعديل
-                              {/* Arrow */}
-                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-white dark:border-[#172036] border-t-gray-800 dark:border-t-gray-800"></div>
-                            </div>
-                          </div>
-
-                          <div className="relative group">
-                            <button
-                              onClick={() => {
-                                console.log("Deleting ID:", item.id);
-                                mutate(item.id as string);
-                              }}
-                              disabled={isPending}
-                              className="text-danger-500 leading-none"
-                            >
-                              <i className="material-symbols-outlined !text-md">
-                                delete
-                              </i>
-                            </button>
-
-                            {/* Tooltip */}
-                            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              مسح
-                              {/* Arrow */}
-                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-white dark:border-[#172036] border-t-gray-800 dark:border-t-gray-800"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-            <div className=" flex justify-between">
-              <p className="mt-2 text-gray-600 dark:text-gray-300 text-sm">
-                عرض {endIndex} توصية من اجمالي {total} توصية
-              </p>
-
-              <div className="mt-4 flex justify-center gap-2">
-                <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                  disabled={currentPage === 1}
-                  className="px-3 py-1 border rounded disabled:opacity-50"
-                >
-                  السابق
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <button
-                    key={i + 1}
-                    onClick={() => setCurrentPage(i + 1)}
-                    className={`px-3 py-1 border rounded ${
-                      currentPage === i + 1 ? "bg-primary-500 text-white" : ""
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-                <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={currentPage === totalPages}
-                  className="px-3 py-1 border rounded disabled:opacity-50"
-                >
-                  التالي
-                </button>
-              </div>
-            </div>
-          </div>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+  
+      {/* Pagination */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mt-4">
+        <p className="text-sm text-gray-600 dark:text-gray-300 text-center sm:text-start">
+          عرض {endIndex} توصية من اجمالي {total} توصية
+        </p>
+        <div className="flex flex-wrap justify-center sm:justify-end gap-2">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 border rounded text-sm hover:bg-[#F3EBFF] disabled:opacity-50"
+          >
+            السابق
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 border rounded text-sm ${
+                currentPage === i + 1
+                  ? "bg-[#6043FD] text-white"
+                  : "hover:bg-[#F3EBFF]"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 border rounded text-sm hover:bg-[#F3EBFF] disabled:opacity-50"
+          >
+            التالي
+          </button>
         </div>
       </div>
-    </>
+    </div>
+  </>
+  
   );
 };
 

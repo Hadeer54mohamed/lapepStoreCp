@@ -187,403 +187,269 @@ export default function CategoriesPage() {
       </Head>
 
       <main role="main" aria-label="صفحة إدارة التصنيفات">
+        {/* Header */}
         <header className="mb-[25px] md:flex items-center justify-between">
-          <h1 className="!mb-0 text-2xl font-bold">التصنيفات</h1>
-
-          <nav aria-label="مسار التنقل">
-            <ol className="breadcrumb mt-[12px] md:mt-0 rtl:flex-row-reverse">
-              <li className="breadcrumb-item inline-block relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
+          <h1 className="!mb-0 text-2xl font-bold text-[#011957] dark:text-white">
+            التصنيفات
+          </h1>
+          <nav>
+            <ol className="breadcrumb flex gap-2 mt-2 md:mt-0 text-sm text-gray-600 dark:text-gray-300">
+              <li>
                 <Link
                   href="/dashboard"
-                  className="inline-block relative ltr:pl-[22px] rtl:pr-[22px] transition-all hover:text-primary-500"
-                  aria-label="العودة للصفحة الرئيسية"
+                  className="inline-flex items-center text-[#6043FD] hover:text-[#9861FB] transition"
                 >
-                  <i
-                    className="material-symbols-outlined absolute ltr:left-0 rtl:right-0 !text-lg -mt-px text-primary-500 top-1/2 -translate-y-1/2"
-                    aria-hidden="true"
-                  >
+                  <i className="material-symbols-outlined !text-lg mr-1">
                     home
                   </i>
                   رئيسية
                 </Link>
               </li>
-              <li className="breadcrumb-item inline-block relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
+              <li>/</li>
+              <li className="breadcrumb-item mx-[11px] text-primary-500">
                 التصنيفات
               </li>
             </ol>
           </nav>
         </header>
 
-        <section
-          className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md"
-          aria-label="قائمة التصنيفات"
-        >
-          <header className="trezo-card-header mb-[20px] md:mb-[25px] sm:flex items-center justify-between">
-            <div className="trezo-card-subtitle mt-[15px] sm:mt-0">
-              <button
-                onClick={() => setIsAddModalOpen(true)}
-                className="inline-block transition-all rounded-md font-medium px-[13px] py-[6px] text-primary-500 border border-primary-500 hover:bg-primary-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-                aria-label="إضافة تصنيف جديد"
-              >
-                <span className="inline-block relative ltr:pl-[22px] rtl:pr-[22px]">
-                  <i
-                    className="material-symbols-outlined !text-[22px] absolute ltr:-left-[4px] rtl:-right-[4px] top-1/2 -translate-y-1/2"
-                    aria-hidden="true"
-                  >
-                    add
-                  </i>
-                  إضافة تصنيف جديد
-                </span>
-              </button>
-            </div>
+        {/* Card */}
+        <section className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md">
+          <header className="mb-[20px] sm:flex items-center justify-between">
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className="inline-block rounded-md font-medium px-[13px] py-[8px] 
+              text-white bg-gradient-to-r from-[#6043FD] via-[#9861FB] to-[#BA6FEE] 
+              hover:from-[#5034e5] hover:via-[#8450e8] hover:to-[#a65ee0] 
+              focus:outline-none focus:ring-2 focus:ring-[#6043FD] focus:ring-offset-2 
+              transition-all shadow-md"
+            >
+              <i className="material-symbols-outlined align-middle mr-1">add</i>
+              إضافة تصنيف جديد
+            </button>
           </header>
 
-          <div className="trezo-card-content">
-            <div className="table-responsive overflow-x-auto">
-              <table
-                className="w-full"
-                role="table"
-                aria-label="جدول التصنيفات"
+          {/* Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="text-[#011957] dark:text-white bg-gradient-to-r from-[#F3EBFF] to-[#E9D8FD] dark:from-[#15203c] dark:to-[#1a2747]"
               >
-                <thead className="text-black dark:text-white">
+                <tr className="text-[#011957] dark:text-white bg-[#F3EBFF] dark:bg-[#15203c]">
+                  <th className="px-4 py-3 text-right font-medium">التصنيف</th>
+                  <th className="px-4 py-3 text-right font-medium">
+                    الإجراءات
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-black dark:text-white">
+                {categories?.length === 0 ? (
                   <tr>
-                    {["التصنيف", "الاجرائات"].map((header) => (
-                      <th
-                        key={header}
-                        className="font-medium ltr:text-left rtl:text-right px-[20px] py-[11px] bg-gray-50 dark:bg-[#15203c] whitespace-nowrap ltr:first:rounded-tl-md ltr:last:rounded-tr-md rtl:first:rounded-tr-md rtl:last:rounded-tl-md"
-                        scope="col"
-                      >
-                        {header}
-                      </th>
-                    ))}
+                    <td colSpan={2} className="text-center py-8 text-gray-500">
+                      لا توجد تصنيفات متاحة
+                    </td>
                   </tr>
-                </thead>
-
-                <tbody className="text-black dark:text-white">
-                  {categories?.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan={2}
-                        className="text-center py-8 text-gray-500"
+                ) : (
+                  categories?.map((cat) => (
+                    <tr
+                      key={cat.id}
+                      className="border-b border-gray-100 dark:border-[#172036] hover:bg-[#F3EBFF]/40 dark:hover:bg-[#6043FD]/10 transition"
                       >
-                        لا توجد تصنيفات متاحة
+                      <td className="px-4 py-3">
+                        <div className="flex items-center">
+                          <div className="relative w-10 h-10">
+                            {cat.image_url ? (
+                              <Image
+                                src={cat.image_url}
+                                alt={cat.name_ar}
+                                fill
+                                className="rounded-md object-cover"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 bg-gray-100 dark:bg-[#15203c] rounded flex items-center justify-center">
+                                <i className="material-symbols-outlined text-gray-400">
+                                  image
+                                </i>
+                              </div>
+                            )}
+                          </div>
+                          <div className="mr-3">
+                            <p className="font-medium">{cat.name_ar}</p>
+                            <p className="text-sm text-gray-500">
+                              {cat.name_en}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex gap-3">
+                          <button
+                            onClick={() => openEditModal(cat)}
+                            className="text-gray-500 hover:text-[#6043FD]"
+                          >
+                          <i className="material-symbols-outlined !text-[20px] font-normal">
+                          edit</i>
+                          </button>
+                          <button
+                            onClick={() => openDeleteModal(cat)}
+                            className="text-red-500 hover:text-red-600"
+                          >
+                          <i className="material-symbols-outlined !text-[20px] font-normal">
+                          delete</i>
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  ) : (
-                    categories?.map((cat) => (
-                      <tr key={cat.id}>
-                        <td className="ltr:text-left rtl:text-right whitespace-nowrap px-[20px] py-[15px] border-b border-gray-100 dark:border-[#172036] ltr:first:border-l ltr:last:border-r rtl:first:border-r rtl:last:border-l">
-                          <div className="flex items-center text-black dark:text-white transition-all hover:text-primary-500">
-                            <div className="relative w-[40px] h-[40px]">
-                              {cat.image_url ? (
-                                <Image
-                                  src={cat.image_url}
-                                  alt={`صورة تصنيف ${cat.name_ar}`}
-                                  width={40}
-                                  height={40}
-                                  className="w-full h-full object-cover rounded-md"
-                                />
-                              ) : (
-                                <div
-                                  className="w-full h-full bg-gray-100 dark:bg-[#15203c] rounded-md flex items-center justify-center"
-                                  aria-label="لا توجد صورة"
-                                >
-                                  <i
-                                    className="material-symbols-outlined text-gray-400 dark:text-gray-500 text-xl"
-                                    aria-hidden="true"
-                                  >
-                                    image
-                                  </i>
-                                </div>
-                              )}
-                            </div>
-                            <div className="ltr:ml-[12px] rtl:mr-[12px]">
-                              <span className="block text-[15px] font-medium">
-                                {cat.name_ar}
-                              </span>
-                              <span className="block text-[13px] text-gray-500 dark:text-gray-400">
-                                {cat.name_en}
-                              </span>
-                            </div>
-                          </div>
-                        </td>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-                        <td className="ltr:text-left rtl:text-right whitespace-nowrap px-[20px] py-[15px] border-b border-gray-100 dark:border-[#172036] ltr:first:border-l ltr:last:border-r rtl:first:border-r rtl:last:border-l">
-                          <div className="flex items-center gap-[9px]">
-                            <div className="relative group">
-                              <button
-                                onClick={() => openEditModal(cat)}
-                                className="text-gray-500 leading-none focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded"
-                                type="button"
-                                aria-label={`تعديل التصنيف: ${cat.name_ar}`}
-                              >
-                                <i
-                                  className="material-symbols-outlined !text-md"
-                                  aria-hidden="true"
-                                >
-                                  edit
-                                </i>
-                              </button>
-
-                              {/* Tooltip */}
-                              <div
-                                className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                                role="tooltip"
-                              >
-                                تعديل
-                                {/* Arrow */}
-                                <div
-                                  className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-white dark:border-[#172036] border-t-gray-800 dark:border-t-gray-800"
-                                  aria-hidden="true"
-                                ></div>
-                              </div>
-                            </div>
-
-                            <div className="relative group">
-                              <button
-                                onClick={() => openDeleteModal(cat)}
-                                className="text-danger-500 leading-none focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
-                                aria-label={`حذف التصنيف: ${cat.name_ar}`}
-                              >
-                                <i
-                                  className="material-symbols-outlined !text-md"
-                                  aria-hidden="true"
-                                >
-                                  delete
-                                </i>
-                              </button>
-
-                              {/* Tooltip */}
-                              <div
-                                className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                                role="tooltip"
-                              >
-                                مسح
-                                {/* Arrow */}
-                                <div
-                                  className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-white dark:border-[#172036] border-t-gray-800 dark:border-t-gray-800"
-                                  aria-hidden="true"
-                                ></div>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+        {/* ============== مودال الإضافة ============== */}
+        {isAddModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="bg-white dark:bg-[#0c1427] p-6 rounded-lg shadow-lg w-full max-w-md">
+              <h2 className="text-lg font-bold mb-4 text-[#6043FD]">
+                إضافة تصنيف جديد
+              </h2>
+              <input
+                type="text"
+                placeholder="الاسم بالعربية"
+                value={newAr}
+                onChange={(e) => setNewAr(e.target.value)}
+                className="w-full mb-3 p-2 border rounded-md dark:bg-[#15203c] dark:text-white"
+              />
+              <input
+                type="text"
+                placeholder="الاسم بالإنجليزية"
+                value={newEn}
+                onChange={(e) => setNewEn(e.target.value)}
+                className="w-full mb-3 p-2 border rounded-md dark:bg-[#15203c] dark:text-white"
+              />
+              <input
+                type="file"
+                onChange={(e) => handleImageChange(e, true)}
+                className="mb-3 w-full bg-[#f3ebff]"
+              />
+              {newImagePreview && (
+                <div className="mb-3">
+                  <Image
+                    src={newImagePreview}
+                    alt="preview"
+                    width={80}
+                    height={80}
+                    className="rounded-md object-cover"
+                  />
+                </div>
+              )}
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setIsAddModalOpen(false)}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-[#15203c] dark:hover:bg-[#1a2747] rounded-md transition"
+                      >
+                  إلغاء
+                </button>
+                <button
+                  onClick={handleAddCategory}
+                  disabled={isAdding}
+                  className="px-4 py-2 text-white rounded-md bg-gradient-to-r from-[#6043FD] to-[#9861FB]"
+                >
+                  {isAdding ? "جاري الإضافة..." : "إضافة"}
+                </button>
+              </div>
             </div>
           </div>
+        )}
 
-          {/* مودال التعديل */}
-          {editingCategory && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="edit-modal-title"
-            >
-              <div className="bg-white dark:bg-[#0c1427] rounded-xl shadow-2xl p-8 w-full max-w-md mx-4">
-                <h2
-                  id="edit-modal-title"
-                  className="text-2xl font-bold mb-6 text-gray-800 dark:text-white"
-                >
-                  تعديل التصنيف
-                </h2>
-                <div className="mb-6">
-                  <label className="block text-sm font-medium mb-3 text-gray-700 dark:text-gray-300">
-                    الصورة
-                  </label>
-                  <div className="flex items-center gap-4">
-                    {editImagePreview && (
-                      <Image
-                        src={editImagePreview}
-                        alt="معاينة الصورة"
-                        width={96}
-                        height={96}
-                        className="w-24 h-24 object-cover rounded-lg shadow-sm"
-                      />
-                    )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageChange(e, false)}
-                      className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 dark:file:bg-[#15203c] dark:file:text-primary-400 transition-all duration-200"
-                      aria-label="اختر صورة جديدة"
-                    />
-                  </div>
+        {/* ============== مودال التعديل ============== */}
+        {editingCategory && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="bg-white dark:bg-[#0c1427] p-6 rounded-lg shadow-lg w-full max-w-md">
+              <h2 className="text-lg font-bold mb-4 text-[#6043FD]">
+                تعديل التصنيف
+              </h2>
+              <input
+                type="text"
+                placeholder="الاسم بالعربية"
+                value={editAr}
+                onChange={(e) => setEditAr(e.target.value)}
+                className="w-full mb-3 p-2 border rounded-md dark:bg-[#15203c] dark:text-white"
+              />
+              <input
+                type="text"
+                placeholder="الاسم بالإنجليزية"
+                value={editEn}
+                onChange={(e) => setEditEn(e.target.value)}
+                className="w-full mb-3 p-2 border rounded-md dark:bg-[#15203c] dark:text-white"
+              />
+              <input
+                type="file"
+                onChange={(e) => handleImageChange(e, false)}
+                className="mb-3 w-full bg-[#f3ebff]"
+              />
+              {editImagePreview && (
+                <div className="mb-3">
+                  <Image
+                    src={editImagePreview}
+                    alt="preview"
+                    width={80}
+                    height={80}
+                    className="rounded-md object-cover"
+                  />
                 </div>
-                <input
-                  type="text"
-                  placeholder="الاسم بالعربية"
-                  className="w-full mb-4 px-4 py-3 border border-gray-300 dark:border-[#172036] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white dark:bg-[#0c1427] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                  value={editAr}
-                  onChange={(e) => setEditAr(e.target.value)}
+              )}
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={closeEditModal}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-[#15203c] dark:hover:bg-[#1a2747] rounded-md transition"
+                  >
+                  إلغاء
+                </button>
+                <button
+                  onClick={handleEditSave}
                   disabled={isUpdating}
-                  aria-label="الاسم بالعربية"
-                />
-                <input
-                  type="text"
-                  placeholder="الاسم بالإنجليزية"
-                  className="w-full mb-6 px-4 py-3 border border-gray-300 dark:border-[#172036] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white dark:bg-[#0c1427] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                  value={editEn}
-                  onChange={(e) => setEditEn(e.target.value)}
-                  disabled={isUpdating}
-                  aria-label="الاسم بالإنجليزية"
-                />
-                <div className="flex justify-end gap-4">
-                  <button
-                    onClick={closeEditModal}
-                    disabled={isUpdating}
-                    className="px-6 py-3 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-[#15203c] dark:hover:bg-[#1a2942] text-gray-700 dark:text-gray-200 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                    aria-label="إلغاء التعديل"
-                  >
-                    إلغاء
-                  </button>
-                  <button
-                    onClick={handleEditSave}
-                    disabled={isUpdating || !editAr.trim() || !editEn.trim()}
-                    className="px-6 py-3 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-                    aria-label="حفظ التغييرات"
-                  >
-                    {isUpdating ? "جاري الحفظ..." : "حفظ التغييرات"}
-                  </button>
-                </div>
+                  className="px-4 py-2 text-white rounded-md bg-gradient-to-r from-[#6043FD] to-[#9861FB]"
+                >
+                  {isUpdating ? "جاري الحفظ..." : "حفظ"}
+                </button>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* مودال الحذف */}
-          {deletingCategory && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="delete-modal-title"
-            >
-              <div className="bg-white dark:bg-[#0c1427] rounded-xl shadow-2xl p-8 w-full max-w-sm mx-4 text-center">
-                <div
-                  className="w-16 h-16 bg-red-100 dark:bg-[#15203c] rounded-full flex items-center justify-center mx-auto mb-6"
-                  aria-hidden="true"
-                >
-                  <i className="material-symbols-outlined text-red-600 dark:text-red-400 text-3xl">
-                    warning
-                  </i>
-                </div>
-                <h2
-                  id="delete-modal-title"
-                  className="text-xl font-bold mb-4 text-gray-800 dark:text-white"
-                >
-                  تأكيد الحذف
-                </h2>
-                <p className="mb-8 text-gray-600 dark:text-gray-300">
-                  هل أنت متأكد أنك تريد حذف التصنيف{" "}
-                  <span className="font-semibold text-gray-800 dark:text-white">
-                    {deletingCategory.name_ar}
-                  </span>
-                  ؟
-                </p>
-                <div className="flex justify-center gap-4">
-                  <button
-                    onClick={closeDeleteModal}
-                    disabled={isDeleting}
-                    className="px-6 py-3 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-[#15203c] dark:hover:bg-[#1a2942] text-gray-700 dark:text-gray-200 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                    aria-label="إلغاء الحذف"
+        {/* ============== مودال الحذف ============== */}
+        {deletingCategory && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="bg-white dark:bg-[#0c1427] p-6 rounded-lg shadow-lg w-full max-w-md">
+              <h2 className="text-lg font-bold mb-4 text-red-600">
+                حذف التصنيف
+              </h2>
+              <p className="mb-4">
+                هل أنت متأكد أنك تريد حذف التصنيف{" "}
+                <span className="font-semibold">
+                  {deletingCategory.name_ar}
+                </span>
+                ؟
+              </p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={closeDeleteModal}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-[#15203c] dark:hover:bg-[#1a2747] rounded-md transition"
                   >
-                    إلغاء
-                  </button>
-                  <button
-                    onClick={handleDeleteConfirm}
-                    disabled={isDeleting}
-                    className="px-6 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                    aria-label="تأكيد الحذف"
-                  >
-                    {isDeleting ? "جارٍ الحذف..." : "تأكيد الحذف"}
-                  </button>
-                </div>
+                  إلغاء
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  disabled={isDeleting}
+                  className="px-4 py-2 text-white rounded-md bg-gradient-to-r from-red-500 to-red-600"
+                >
+                  {isDeleting ? "جاري الحذف..." : "حذف"}
+                </button>
               </div>
             </div>
-          )}
-
-          {/* مودال الإضافة */}
-          {isAddModalOpen && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="add-modal-title"
-            >
-              <div className="bg-white dark:bg-[#0c1427] rounded-xl shadow-2xl p-8 w-full max-w-md mx-4">
-                <h2
-                  id="add-modal-title"
-                  className="text-2xl font-bold mb-6 text-gray-800 dark:text-white"
-                >
-                  إضافة تصنيف جديد
-                </h2>
-                <div className="mb-6">
-                  <label className="block text-sm font-medium mb-3 text-gray-700 dark:text-gray-300">
-                    الصورة
-                  </label>
-                  <div className="flex items-center gap-4">
-                    {newImagePreview && (
-                      <Image
-                        src={newImagePreview}
-                        alt="معاينة الصورة"
-                        width={96}
-                        height={96}
-                        className="w-24 h-24 object-cover rounded-lg shadow-sm"
-                      />
-                    )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageChange(e, true)}
-                      className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 dark:file:bg-[#15203c] dark:file:text-primary-400 transition-all duration-200"
-                      aria-label="اختر صورة للتصنيف الجديد"
-                    />
-                  </div>
-                </div>
-                <input
-                  type="text"
-                  placeholder="الاسم بالعربية"
-                  className="w-full mb-4 px-4 py-3 border border-gray-300 dark:border-[#172036] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white dark:bg-[#0c1427] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                  value={newAr}
-                  onChange={(e) => setNewAr(e.target.value)}
-                  disabled={isAdding}
-                  aria-label="الاسم بالعربية"
-                />
-                <input
-                  type="text"
-                  placeholder="الاسم بالإنجليزية"
-                  className="w-full mb-6 px-4 py-3 border border-gray-300 dark:border-[#172036] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white dark:bg-[#0c1427] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                  value={newEn}
-                  onChange={(e) => setNewEn(e.target.value)}
-                  disabled={isAdding}
-                  aria-label="الاسم بالإنجليزية"
-                />
-                <div className="flex justify-end gap-4">
-                  <button
-                    onClick={() => setIsAddModalOpen(false)}
-                    disabled={isAdding}
-                    className="px-6 py-3 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-[#15203c] dark:hover:bg-[#1a2942] text-gray-700 dark:text-gray-200 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                    aria-label="إلغاء الإضافة"
-                  >
-                    إلغاء
-                  </button>
-                  <button
-                    onClick={handleAddCategory}
-                    disabled={isAdding || !newAr.trim() || !newEn.trim()}
-                    className="px-6 py-3 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-                    aria-label="إضافة التصنيف"
-                  >
-                    {isAdding ? "جاري الإضافة..." : "إضافة التصنيف"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </section>
+          </div>
+        )}
       </main>
     </>
   );

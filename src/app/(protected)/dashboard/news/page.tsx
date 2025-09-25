@@ -135,7 +135,7 @@ const ProductListTable: React.FC = () => {
             </Link>
           </li>
           <li>/</li>
-          <li className="text-gray-500 dark:text-gray-400">المنتجات</li>
+          <li className="breadcrumb-item mx-[11px] text-primary-500">المنتجات</li>
         </ol>
       </div>
 
@@ -265,8 +265,8 @@ const ProductListTable: React.FC = () => {
                 products.map((item) => (
                   <tr
                     key={item.id}
-                    className="border-b border-gray-100 dark:border-[#172036] hover:bg-[#F9F6FF] dark:hover:bg-[#1c2540] transition"
-                  >
+                    className="border-b border-gray-100 dark:border-[#172036] hover:bg-[#F3EBFF]/40 dark:hover:bg-[#6043FD]/10 transition"
+                    >
                     {/* المنتج */}
                     <td className="text-center md:ltr:text-left md:rtl:text-right whitespace-nowrap px-[20px] py-[15px] border-b border-gray-100 dark:border-[#172036] ltr:first:border-l ltr:last:border-r rtl:first:border-r rtl:last:border-l">
                         <div className="flex flex-col md:flex-row items-center justify-center md:justify-start text-black dark:text-white transition-all hover:text-primary-500">
@@ -385,10 +385,10 @@ const ProductListTable: React.FC = () => {
                               { duration: 6000 }
                             )
                           }
-                          className="text-gray-500 hover:text-red-500 transition"
-                        >
+                          className="text-red-500 hover:text-red-600"
+                          >
                           <i className="material-symbols-outlined !text-[20px] font-normal">
-                            delete
+                          delete
                           </i>
                         </button>
                       </div>

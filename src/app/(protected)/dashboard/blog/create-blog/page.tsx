@@ -141,320 +141,292 @@ const CreateNewsForm: React.FC = () => {
 
   return (
     <>
-      <div className="mb-[25px] md:flex items-center justify-between">
-        <h5 className="!mb-0"> انشاء مقال</h5>
-
-        <ol className="breadcrumb mt-[12px] md:mt-0 rtl:flex-row-reverse">
-          <li className="breadcrumb-item inline-block relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
-            <Link
-              href="/dashboard"
-              className="inline-block relative ltr:pl-[22px] rtl:pr-[22px] transition-all hover:text-primary-500"
-            >
-              <i className="material-symbols-outlined absolute ltr:left-0 rtl:right-0 !text-lg -mt-px text-primary-500 top-1/2 -translate-y-1/2">
-                home
-              </i>
-              رئيسية
-            </Link>
-          </li>
-          <li className="breadcrumb-item inline-block  relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
-            المقالات
-          </li>
-          <li className="breadcrumb-item inline-block  relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
-            انشاء مقال
-          </li>
-        </ol>
-      </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className=" gap-[25px]">
-          <div className="lg:col-span-2">
-            <div className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md">
-              <div className="trezo-card-header mb-[20px] md:mb-[25px] flex items-center justify-between">
-                <div className="trezo-card-title">
-                  <h5 className="!mb-0">أضف مقال</h5>
-                </div>
+    {/* ===== Header + Breadcrumb ===== */}
+    <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
+      <h5 className="!mb-0 text-xl font-semibold text-[#011957] dark:text-white">
+        إنشاء مقال
+      </h5>
+  
+      <ol className="breadcrumb flex gap-2 mt-2 md:mt-0 text-sm text-gray-600 dark:text-gray-300">
+        <li>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center text-[#6043FD] hover:text-[#9861FB] transition"
+          >
+            <i className="material-symbols-outlined !text-lg mr-1">home</i>
+            رئيسية
+          </Link>
+        </li>
+        <li>/</li>
+        <li className="text-gray-500 dark:text-gray-400">المقالات</li>
+        <li className="text-gray-500 dark:text-gray-400">إنشاء مقال</li>
+      </ol>
+    </div>
+  
+    {/* ===== Form ===== */}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="gap-6">
+        <div className="lg:col-span-2">
+          <div className="trezo-card bg-[#F7F7F7] dark:bg-[#0c1427] mb-6 p-6 rounded-lg shadow">
+            <div className="trezo-card-header mb-6 flex items-center justify-between">
+              <h5 className="!mb-0 text-lg font-semibold text-[#011957] dark:text-white">
+                أضف مقال
+              </h5>
+            </div>
+  
+            {/* Inputs */}
+            <div className="sm:grid sm:grid-cols-2 sm:gap-[25px]">
+              {/* Title Arabic */}
+              <div className="mb-[20px] sm:mb-0">
+                <label className="mb-[10px] block text-[#011957] dark:text-white font-medium">
+                  عنوان المقال (بالعربي)
+                </label>
+                <input
+                  type="text"
+                  className="h-[55px] rounded-md text-[#011957] dark:text-white border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-[17px] w-full outline-0 transition placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                  placeholder="يجب ألا يزيد عن 100 حرف"
+                  id="title_ar"
+                  {...register("title_ar", {
+                    required: "يجب إدخال عنوان المقال",
+                    max: { value: 100, message: "يجب ألا يزيد عن 100 حرف" },
+                  })}
+                />
+                {errors?.title_ar?.message && (
+                  <span className="text-[#E10E0E] text-sm">
+                    {errors.title_ar.message}
+                  </span>
+                )}
               </div>
-
-              <div className="trezo-card-content">
-                <div className="sm:grid sm:grid-cols-2 sm:gap-[25px]">
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      عنوان المقال (بالعربي)
-                    </label>
-                    <input
-                      type="text"
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                      placeholder="يجب الايزيد عن 100 حرف"
-                      id="title_ar"
-                      {...register("title_ar", {
-                        required: "يجب ادخال عنوان الخبر",
-                        max: {
-                          value: 100,
-                          message: "يجب الايزيد عن 100 حرف",
-                        },
-                      })}
-                    />
-                    {errors?.title_ar?.message && (
-                      <span className="text-red-700 text-sm">
-                        {errors.title_ar.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      عنوان المقال (بالانجليزي)
-                    </label>
-                    <input
-                      type="text"
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                      placeholder="يجب الايزيد عن 100 حرف"
-                      id="title_en"
-                      {...register("title_en", {
-                        required: "يجب ادخال عنوان الخبر",
-                        max: {
-                          value: 100,
-                          message: "يجب الايزيد عن 100 حرف",
-                        },
-                      })}
-                    />
-                    {errors?.title_en?.message && (
-                      <span className="text-red-700 text-sm">
-                        {errors.title_en.message}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="sm:col-span-2 mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      المقال (بالعربي)
-                    </label>
-                    <EditorProvider>
-                      <Editor
-                        value={editorAr}
-                        onChange={(e) => {
-                          setEditorAr(e.target.value);
-                          setValue("content_ar", e.target.value, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                          });
-                        }}
-                        style={{
-                          minHeight: "200px",
-                          fontFamily: "Cairo, sans-serif",
-                        }}
-                        className="rsw-editor"
-                      >
-                        <Toolbar>
-                          <BtnUndo />
-                          <BtnRedo />
-                          <Separator />
-                          <BtnBold />
-                          <BtnItalic />
-                          <BtnUnderline />
-                          <BtnStrikeThrough />
-                          <Separator />
-                          <BtnNumberedList />
-                          <BtnBulletList />
-                          <Separator />
-                          <BtnLink />
-                          <BtnClearFormatting />
-                          <HtmlButton />
-                          <Separator />
-                          <BtnStyles />
-                        </Toolbar>
-                      </Editor>
-                    </EditorProvider>
-                  </div>
-
-                  <div className="sm:col-span-2 mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      المقال (بالانجليزي)
-                    </label>
-                    <EditorProvider>
-                      <Editor
-                        value={editorEn}
-                        onChange={(e) => {
-                          setEditorEn(e.target.value);
-                          setValue("content_en", e.target.value, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                          });
-                        }}
-                        style={{ minHeight: "200px" }}
-                        className="rsw-editor"
-                      >
-                        <Toolbar>
-                          <BtnUndo />
-                          <BtnRedo />
-                          <Separator />
-                          <BtnBold />
-                          <BtnItalic />
-                          <BtnUnderline />
-                          <BtnStrikeThrough />
-                          <Separator />
-                          <BtnNumberedList />
-                          <BtnBulletList />
-                          <Separator />
-                          <BtnLink />
-                          <BtnClearFormatting />
-                          <HtmlButton />
-                          <Separator />
-                          <BtnStyles />
-                        </Toolbar>
-                      </Editor>
-                    </EditorProvider>
-                  </div>
-
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      لاضافه مقطع من اليوتيوب
-                    </label>
-                    <input
-                      type="text"
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                      placeholder="th0VZq9lNhR"
-                      id="yt_code"
-                      {...register("yt_code")}
-                    />
-                  </div>
-
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      اسم الناشر
-                    </label>
-                    <input
-                      type="text"
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-primary-500"
-                      placeholder="اسم الناشر"
-                      id="author"
-                      {...register("author", {
-                        required: "يجب ادخال اسم الناشر",
-                        maxLength: {
-                          value: 50,
-                          message: "يجب ألا يزيد عن 50 حرف",
-                        },
-                      })}
-                    />
-                    {errors?.author?.message && (
-                      <span className="text-red-700 text-sm">
-                        {errors.author.message}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="sm:col-span-2 mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] text-black dark:text-white font-medium block">
-                      الصور الخاصة بالمقال
-                    </label>
-
-                    <div id="fileUploader">
-                      <div className="relative flex items-center justify-center overflow-hidden rounded-md py-[88px] px-[20px] border border-gray-200 dark:border-[#172036]">
-                        <div className="flex flex-col items-center justify-center text-center">
-                          <div className="w-[35px] h-[35px] border border-gray-100 dark:border-[#15203c] flex items-center justify-center rounded-md text-primary-500 text-lg mb-3">
-                            <i className="ri-upload-2-line"></i>
-                          </div>
-                          <p className="leading-[1.5] mb-2">
-                            <strong className="text-black dark:text-white">
-                              اضغط لرفع
-                            </strong>
-                            <br /> الصور من هنا
-                          </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            الحد الأقصى: 5 صور
-                            <br />
-                            حجم الصورة: حتى 50 ميجابايت
-                          </p>
-                        </div>
-
-                        <input
-                          type="file"
-                          id="images"
-                          multiple
-                          accept="image/*"
-                          className="absolute top-0 left-0 right-0 bottom-0 rounded-md z-[1] opacity-0 cursor-pointer"
-                          onChange={handleFileChange}
-                        />
-                        {errors?.images?.message && (
-                          <span className="text-red-700 text-sm">
-                            {errors.images.message}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Image Previews */}
-                      <div className="mt-[10px] flex flex-wrap gap-2">
-                        {selectedImages.map((image, index) => (
-                          <div
-                            key={index}
-                            className="relative w-[50px] h-[50px]"
-                          >
-                            <Image
-                              src={URL.createObjectURL(image)}
-                              alt="product-preview"
-                              width={50}
-                              height={50}
-                              className="rounded-md"
-                            />
-                            <button
-                              type="button"
-                              className="absolute top-[-5px] right-[-5px] bg-orange-500 text-white w-[20px] h-[20px] flex items-center justify-center rounded-full text-xs rtl:right-auto rtl:left-[-5px]"
-                              onClick={() => handleRemoveImage(index)}
-                            >
-                              ✕
-                            </button>
-                          </div>
-                        ))}
-                      </div>
+  
+              {/* Title English */}
+              <div className="mb-[20px] sm:mb-0">
+                <label className="mb-[10px] block text-[#011957] dark:text-white font-medium">
+                  عنوان المقال (بالإنجليزية)
+                </label>
+                <input
+                  type="text"
+                  className="h-[55px] rounded-md text-[#011957] dark:text-white border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-[17px] w-full outline-0 transition placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                  placeholder="Max 100 characters"
+                  id="title_en"
+                  {...register("title_en", {
+                    required: "Title is required",
+                    max: { value: 100, message: "Must not exceed 100 characters" },
+                  })}
+                />
+                {errors?.title_en?.message && (
+                  <span className="text-[#E10E0E] text-sm">
+                    {errors.title_en.message}
+                  </span>
+                )}
+              </div>
+  
+              {/* Content Arabic */}
+              <div className="sm:col-span-2 mb-[20px] sm:mb-0">
+                <label className="mb-[10px] block text-[#011957] dark:text-white font-medium">
+                  المقال (بالعربي)
+                </label>
+                <EditorProvider>
+                  <Editor
+                    value={editorAr}
+                    onChange={(e) => {
+                      setEditorAr(e.target.value);
+                      setValue("content_ar", e.target.value, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
+                    }}
+                    containerProps={{
+                      style: {
+                        borderColor: "#BA6FEE",
+                        background: "#F9F6FF",
+                        color: "#011957",
+                      },
+                    }}
+                  >
+                    <Toolbar>
+                      <BtnBold />
+                      <BtnItalic />
+                      <BtnUnderline />
+                      <BtnStrikeThrough />
+                      <Separator />
+                      <BtnBulletList />
+                      <BtnNumberedList />
+                      <Separator />
+                      <BtnLink />
+                      <Separator />
+                      <BtnUndo />
+                      <BtnRedo />
+                      <Separator />
+                      <BtnStyles />
+                      <HtmlButton />
+                    </Toolbar>
+                  </Editor>
+                </EditorProvider>
+              </div>
+  
+              {/* Content English */}
+              <div className="sm:col-span-2 mb-[20px] sm:mb-0">
+                <label className="mb-[10px] block text-[#011957] dark:text-white font-medium">
+                  المقال (بالإنجليزية)
+                </label>
+                <EditorProvider>
+                  <Editor
+                    value={editorEn}
+                    onChange={(e) => {
+                      setEditorEn(e.target.value);
+                      setValue("content_en", e.target.value, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
+                    }}
+                    containerProps={{
+                      style: {
+                        borderColor: "#BA6FEE",
+                        background: "#F9F6FF",
+                        color: "#011957",
+                      },
+                    }}
+                  >
+                    <Toolbar>
+                      <BtnBold />
+                      <BtnItalic />
+                      <BtnUnderline />
+                      <BtnStrikeThrough />
+                      <Separator />
+                      <BtnBulletList />
+                      <BtnNumberedList />
+                      <Separator />
+                      <BtnLink />
+                      <Separator />
+                      <BtnUndo />
+                      <BtnRedo />
+                      <Separator />
+                      <BtnStyles />
+                      <HtmlButton />
+                    </Toolbar>
+                  </Editor>
+                </EditorProvider>
+              </div>
+  
+              {/* YouTube Code */}
+              <div className="mb-[20px] sm:mb-0">
+                <label className="mb-[10px] block text-[#011957] dark:text-white font-medium">
+                  لإضافة مقطع من اليوتيوب
+                </label>
+                <input
+                  type="text"
+                  className="h-[55px] rounded-md text-[#011957] dark:text-white border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-[17px] w-full outline-0 transition placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                  placeholder="th0VZq9lNhR"
+                  id="yt_code"
+                  {...register("yt_code")}
+                />
+              </div>
+  
+              {/* Author */}
+              <div className="mb-[20px] sm:mb-0">
+                <label className="mb-[10px] block text-[#011957] dark:text-white font-medium">
+                  اسم الناشر
+                </label>
+                <input
+                  type="text"
+                  className="h-[55px] rounded-md text-[#011957] dark:text-white border border-[#BA6FEE] bg-white dark:bg-[#0c1427] px-[17px] w-full outline-0 transition placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+                  placeholder="اسم الناشر"
+                  id="author"
+                  {...register("author", {
+                    required: "يجب إدخال اسم الناشر",
+                    maxLength: {
+                      value: 50,
+                      message: "يجب ألا يزيد عن 50 حرف",
+                    },
+                  })}
+                />
+                {errors?.author?.message && (
+                  <span className="text-[#E10E0E] text-sm">
+                    {errors.author.message}
+                  </span>
+                )}
+              </div>
+  
+              {/* Images Upload */}
+              <div className="sm:col-span-2 mb-[20px] sm:mb-0">
+                <label className="mb-[10px] block text-[#011957] dark:text-white font-medium">
+                  الصور الخاصة بالمقال
+                </label>
+                <div className="relative flex flex-col items-center justify-center rounded-md py-10 px-4 border-2 border-dashed border-[#BA6FEE] bg-[#F9F6FF] dark:bg-[#1a1a33]">
+                  <div className="text-center">
+                    <div className="w-[40px] h-[40px] flex items-center justify-center rounded-md bg-[#6043FD]/10 text-[#6043FD] mb-3">
+                      <i className="ri-upload-2-line text-xl"></i>
                     </div>
+                    <p className="text-[#011957] dark:text-white">
+                      <strong>اضغط لرفع</strong> الصور من هنا
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      الحد الأقصى: 5 صور | حجم الصورة: حتى 50 ميجابايت
+                    </p>
                   </div>
+                  <input
+                    type="file"
+                    id="images"
+                    multiple
+                    accept="image/*"
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                    onChange={handleFileChange}
+                  />
+                </div>
+  
+                {/* Preview */}
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {selectedImages.map((image, index) => (
+                    <div key={index} className="relative w-[55px] h-[55px]">
+                      <Image
+                        src={URL.createObjectURL(image)}
+                        alt="preview"
+                        width={55}
+                        height={55}
+                        className="rounded-md object-cover"
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-[-6px] right-[-6px] bg-red-500 text-white w-[20px] h-[20px] flex items-center justify-center rounded-full text-xs"
+                        onClick={() => handleRemoveImage(index)}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
-
+  
+        {/* ===== Actions ===== */}
         <div className="trezo-card mb-[25px]">
-          <div className="trezo-card-content">
+          <div className="trezo-card-content flex gap-3">
             <button
-              type="reset"
-              className="font-medium inline-block transition-all rounded-md md:text-md ltr:mr-[15px] rtl:ml-[15px] py-[10px] md:py-[12px] px-[20px] md:px-[22px] bg-danger-500 text-white hover:bg-danger-400"
+            onClick={() => router.push("/dashboard/blog")}
+            className="py-3 px-6 rounded-lg bg-[#E10E0E] text-white font-medium shadow hover:bg-red-600 transition"
             >
-              ألغاء
+              إلغاء
             </button>
-
+  
             <button
               type="submit"
               disabled={isPending || isUploadingImages}
-              className="font-medium inline-block transition-all rounded-md md:text-md py-[10px] md:py-[12px] px-[20px] md:px-[22px] bg-primary-500 text-white hover:bg-primary-400 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="py-3 px-6 rounded-lg bg-gradient-to-r from-[#6043FD] to-[#9861FB] text-white font-medium shadow hover:from-[#5033e0] hover:to-[#8750e0] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <span className="inline-block relative ltr:pl-[29px] rtl:pr-[29px]">
-                {isUploadingImages ? (
-                  <>
-                    <i className="material-symbols-outlined ltr:left-0 rtl:right-0 absolute top-1/2 -translate-y-1/2 animate-spin">
-                      sync
-                    </i>
-                    جاري رفع الصور...
-                  </>
-                ) : isPending ? (
-                  <>
-                    <i className="material-symbols-outlined ltr:left-0 rtl:right-0 absolute top-1/2 -translate-y-1/2 animate-spin">
-                      sync
-                    </i>
-                    جاري الإنشاء...
-                  </>
-                ) : (
-                  <>
-                    <i className="material-symbols-outlined ltr:left-0 rtl:right-0 absolute top-1/2 -translate-y-1/2">
-                      add
-                    </i>
-                    انشاء مقال
-                  </>
-                )}
-              </span>
+              {isUploadingImages
+                ? "جاري رفع الصور..."
+                : isPending
+                ? "جاري الإنشاء..."
+                : "إنشاء مقال"}
             </button>
           </div>
         </div>
-      </form>
-    </>
+      </div>
+    </form>
+  </>
+  
   );
 };
 
