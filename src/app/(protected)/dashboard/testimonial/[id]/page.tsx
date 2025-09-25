@@ -153,216 +153,226 @@ const EditTestimonialPage: React.FC = () => {
 
   return (
     <>
-      <div className="mb-[25px] md:flex items-center justify-between">
-        <h5 className="!mb-0">تعديل التوصية</h5>
-
-        <ol className="breadcrumb mt-[12px] md:mt-0 rtl:flex-row-reverse">
-          <li className="breadcrumb-item inline-block relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
-            <Link
-              href="/dashboard"
-              className="inline-block relative ltr:pl-[22px] rtl:pr-[22px] transition-all hover:text-primary-500"
-            >
-              <i className="material-symbols-outlined absolute ltr:left-0 rtl:right-0 !text-lg -mt-px text-primary-500 top-1/2 -translate-y-1/2">
-                home
-              </i>
-              رئيسية
-            </Link>
-          </li>
-          <li className="breadcrumb-item inline-block relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
-            <Link
-              href="/dashboard/testimonial"
-              className="inline-block relative ltr:pl-[22px] rtl:pr-[22px] transition-all hover:text-primary-500"
-            >
-              التوصيات
-            </Link>
-          </li>
-          <li className="breadcrumb-item inline-block relative text-sm mx-[11px] ltr:first:ml-0 rtl:first:mr-0 ltr:last:mr-0 rtl:last:ml-0">
-            تعديل التوصية
-          </li>
-        </ol>
-      </div>
-
-      <div className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Image Upload */}
-          <div className="space-y-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              صورة التوصية
-            </label>
-            <div className="flex items-center space-x-4 rtl:space-x-reverse">
-              <div className="relative">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  id="image-upload"
-                />
-                <label
-                  htmlFor="image-upload"
-                  className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                >
-                  <i className="material-symbols-outlined mr-2">upload</i>
-                  اختر صورة جديدة
-                </label>
+    {/* Header */}
+    <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
+      <h5 className="!mb-0 text-xl font-semibold text-[#011957] dark:text-white">
+        تعديل التوصية
+      </h5>
+  
+      <ol className="breadcrumb flex gap-2 mt-2 md:mt-0 text-sm text-gray-600 dark:text-gray-300">
+        <li>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center text-[#6043FD] hover:text-[#9861FB] transition"
+          >
+            <i className="material-symbols-outlined !text-lg mr-1">home</i>
+            رئيسية
+          </Link>
+        </li>
+        <li>/</li>
+        <li>
+          <Link
+            href="/dashboard/testimonial"
+            className="text-[#6043FD] hover:text-[#9861FB] transition"
+          >
+            التوصيات
+          </Link>
+        </li>
+        <li>/</li>
+        <li className="text-gray-500 dark:text-gray-400">تعديل التوصية</li>
+      </ol>
+    </div>
+  
+    {/* Card */}
+    <div className="trezo-card bg-[#F7F7F7] dark:bg-[#0c1427] mb-6 p-6 rounded-lg shadow">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Image Upload */}
+        <div>
+          <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+            صورة التوصية
+          </label>
+          <div className="relative flex items-center justify-center rounded-md py-10 px-4 border-2 border-dashed border-[#BA6FEE] bg-[#F9F6FF] dark:bg-[#1a1a33]">
+            <div className="text-center">
+              <div className="w-[35px] h-[35px] border border-[#9861FB] flex items-center justify-center rounded-md text-[#6043FD] mb-3">
+                <i className="ri-upload-2-line"></i>
               </div>
-              {imagePreview && (
-                <div className="relative">
-                  <Image
-                    src={imagePreview}
-                    alt="Preview"
-                    width={100}
-                    height={100}
-                    className="rounded-md object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setImagePreview("");
-                      setImageFile(null);
-                      setFormData((prev) => ({ ...prev, image: "" }));
-                    }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
-                  >
-                    ×
-                  </button>
-                </div>
-              )}
+              <p className="text-[#011957] dark:text-white">
+                <strong>اضغط لرفع</strong> صورة التوصية
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                يمكنك رفع صورة جديدة أو إبقاء الصورة الحالية
+              </p>
             </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="absolute inset-0 opacity-0 cursor-pointer"
+            />
           </div>
-
-          {/* Name Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                الاسم (عربي) *
-              </label>
-              <input
-                type="text"
-                name="name_ar"
-                value={formData.name_ar}
-                onChange={handleInputChange}
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                placeholder="أدخل الاسم باللغة العربية"
-                required
+  
+          {imagePreview && (
+            <div className="mt-3 relative w-[100px] h-[100px]">
+              <Image
+                src={imagePreview}
+                alt="Preview"
+                width={100}
+                height={100}
+                className="rounded-md object-cover w-full h-full"
               />
+              <button
+                type="button"
+                onClick={() => {
+                  setImagePreview("");
+                  setImageFile(null);
+                  setFormData((prev) => ({ ...prev, image: "" }));
+                }}
+                className="absolute top-[-8px] right-[-8px] bg-red-600 text-white w-[22px] h-[22px] flex items-center justify-center rounded-full text-xs"
+              >
+                ✕
+              </button>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                الاسم (إنجليزي) *
-              </label>
-              <input
-                type="text"
-                name="name_en"
-                value={formData.name_en}
-                onChange={handleInputChange}
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                placeholder="Enter name in English"
-                required
-              />
-            </div>
+          )}
+        </div>
+  
+        {/* Name Fields */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+              الاسم (عربي) *
+            </label>
+            <input
+              type="text"
+              name="name_ar"
+              value={formData.name_ar}
+              onChange={handleInputChange}
+              className="h-[55px] rounded-md border border-[#BA6FEE] bg-[#F3EBFF] dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+              placeholder="أدخل الاسم بالعربية"
+              required
+            />
           </div>
-
-          {/* Message Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="sm:col-span-2 mb-[20px] sm:mb-0">
-              <label className="mb-[10px] text-black dark:text-white font-medium block">
-                التوصية (بالعربي) *
-              </label>
-              <EditorProvider>
-                <Editor
-                  value={formData.message_ar}
-                  onChange={(e) => {
-                    setFormData((prev) => ({
-                      ...prev,
-                      message_ar: e.target.value,
-                    }));
-                  }}
-                  style={{ minHeight: "200px" }}
-                  className="rsw-editor"
-                >
-                  <Toolbar>
-                    <BtnUndo />
-                    <BtnRedo />
-                    <Separator />
-                    <BtnBold />
-                    <BtnItalic />
-                    <BtnUnderline />
-                    <BtnStrikeThrough />
-                    <Separator />
-                    <BtnNumberedList />
-                    <BtnBulletList />
-                    <Separator />
-                    <BtnLink />
-                    <BtnClearFormatting />
-                    <HtmlButton />
-                    <Separator />
-                    <BtnStyles />
-                  </Toolbar>
-                </Editor>
-              </EditorProvider>
-            </div>
-
-            <div className="sm:col-span-2 mb-[20px] sm:mb-0">
-              <label className="mb-[10px] text-black dark:text-white font-medium block">
-                التوصية (بالانجليزي) *
-              </label>
-              <EditorProvider>
-                <Editor
-                  value={formData.message_en}
-                  onChange={(e) => {
-                    setFormData((prev) => ({
-                      ...prev,
-                      message_en: e.target.value,
-                    }));
-                  }}
-                  style={{ minHeight: "200px" }}
-                  className="rsw-editor"
-                >
-                  <Toolbar>
-                    <BtnUndo />
-                    <BtnRedo />
-                    <Separator />
-                    <BtnBold />
-                    <BtnItalic />
-                    <BtnUnderline />
-                    <BtnStrikeThrough />
-                    <Separator />
-                    <BtnNumberedList />
-                    <BtnBulletList />
-                    <Separator />
-                    <BtnLink />
-                    <BtnClearFormatting />
-                    <HtmlButton />
-                    <Separator />
-                    <BtnStyles />
-                  </Toolbar>
-                </Editor>
-              </EditorProvider>
-            </div>
+  
+          <div>
+            <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+              الاسم (EN) *
+            </label>
+            <input
+              type="text"
+              name="name_en"
+              value={formData.name_en}
+              onChange={handleInputChange}
+              className="h-[55px] rounded-md border border-[#BA6FEE] bg-[#F3EBFF] dark:bg-[#0c1427] px-4 w-full text-[#011957] dark:text-white placeholder-gray-500 focus:border-[#6043FD] focus:ring-2 focus:ring-[#BA6FEE]"
+              placeholder="Enter name in English"
+              required
+            />
           </div>
-
-          {/* Submit Button */}
-          <div className="flex justify-end space-x-4 rtl:space-x-reverse">
-            <button
-              type="button"
-              onClick={() => router.push("/dashboard/testimonial")}
-              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+        </div>
+  
+        {/* Message Fields */}
+        <div>
+          <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+            التوصية (ع) *
+          </label>
+          <EditorProvider>
+            <Editor
+              style={{ minHeight: "200px" }}
+              value={formData.message_ar}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, message_ar: e.target.value }))
+              }
+              containerProps={{
+                style: {
+                  borderColor: "#BA6FEE",
+                  background: "#F9F6FF",
+                  color: "#011957",
+                },
+              }}
             >
-              إلغاء
-            </button>
-            <button
-              type="submit"
-              disabled={isPending || isUploading}
-              className="px-6 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+              <Toolbar>
+                <BtnUndo />
+                <BtnRedo />
+                <Separator />
+                <BtnBold />
+                <BtnItalic />
+                <BtnUnderline />
+                <BtnStrikeThrough />
+                <Separator />
+                <BtnNumberedList />
+                <BtnBulletList />
+                <Separator />
+                <BtnLink />
+                <BtnClearFormatting />
+                <HtmlButton />
+                <Separator />
+                <BtnStyles />
+              </Toolbar>
+            </Editor>
+          </EditorProvider>
+        </div>
+  
+        <div>
+          <label className="mb-2 text-[#011957] dark:text-white font-medium block">
+            التوصية (EN) *
+          </label>
+          <EditorProvider>
+            <Editor
+              style={{ minHeight: "200px" }}
+              value={formData.message_en}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, message_en: e.target.value }))
+              }
+              containerProps={{
+                style: {
+                  borderColor: "#BA6FEE",
+                  background: "#F9F6FF",
+                  color: "#011957",
+                },
+              }}
             >
-              {isPending || isUploading ? "جاري الحفظ..." : "حفظ التغييرات"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </>
+              <Toolbar>
+                <BtnUndo />
+                <BtnRedo />
+                <Separator />
+                <BtnBold />
+                <BtnItalic />
+                <BtnUnderline />
+                <BtnStrikeThrough />
+                <Separator />
+                <BtnNumberedList />
+                <BtnBulletList />
+                <Separator />
+                <BtnLink />
+                <BtnClearFormatting />
+                <HtmlButton />
+                <Separator />
+                <BtnStyles />
+              </Toolbar>
+            </Editor>
+          </EditorProvider>
+        </div>
+  
+        {/* Buttons */}
+        <div className="flex gap-3 pb-6">
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard/testimonial")}
+            className="py-3 px-6 rounded-lg bg-[#E10E0E] text-white font-medium shadow hover:bg-red-600 transition"
+          >
+            إلغاء
+          </button>
+  
+          <button
+            type="submit"
+            disabled={isPending || isUploading}
+            className="py-3 px-6 rounded-lg bg-[#6043FD] hover:bg-[#9861FB] text-white font-medium shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isPending || isUploading ? "جاري الحفظ..." : "حفظ التغييرات"}
+          </button>
+        </div>
+      </form>
+    </div>
+  </>
+  
   );
 };
 

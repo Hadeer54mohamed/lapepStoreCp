@@ -7,7 +7,6 @@ import {
   EditorProvider,
   BtnBold,
   BtnBulletList,
-  BtnClearFormatting,
   BtnItalic,
   BtnLink,
   BtnNumberedList,

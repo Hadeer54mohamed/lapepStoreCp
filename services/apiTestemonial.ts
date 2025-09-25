@@ -124,28 +124,17 @@ export async function deleteTestemonial(id: string) {
 }
 
 export async function uploadTestimonialImage(
-  file: File | { base64: string; name: string },
+  file: File,
   folder = "testimonials"
 ): Promise<string> {
   try {
-    let fileData: string;
-    let fileName: string;
+    const fileName = `${folder}/${Date.now()}-${file.name}`;
 
-    if (file instanceof File) {
-      // Handle File object
-      const arrayBuffer = await file.arrayBuffer();
-      fileData = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-      fileName = file.name;
-    } else {
-      // Handle base64 object
-      fileData = file.base64;
-      fileName = file.name;
-    }
-
+    // رفع الملف مباشرة كـ File/Blob
     const { data, error } = await supabase.storage
       .from("testmonial-img")
-      .upload(`${folder}/${Date.now()}-${fileName}`, decode(fileData), {
-        contentType: "image/jpeg",
+      .upload(fileName, file, {
+        contentType: file.type,
       });
 
     if (error) {
