@@ -1,6 +1,16 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where([class=dark], [class=dark] *));
+@layer components {
+  .input-style {
+    @apply h-[55px] w-full px-4 rounded-md border border-gray-300 
+           dark:border-[#172036] bg-white dark:bg-[#0c1427] 
+           text-gray-900 dark:text-white text-sm shadow-sm
+           placeholder:text-gray-400 dark:placeholder:text-gray-500
+           focus:border-transparent focus:ring-2 focus:ring-[#9861FB] 
+           outline-none transition-all;
+  }
+}
 
 @theme {
   --font-body: "Cairo", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";

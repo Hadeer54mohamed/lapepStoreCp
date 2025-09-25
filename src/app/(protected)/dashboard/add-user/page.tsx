@@ -103,178 +103,179 @@ export default function SignUpForm() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(submit)}>
-        <div className="gap-[25px]">
-          <div className="xl:col-span-3 2xl:col-span-2">
-            <div className="trezo-card bg-white dark:bg-[#0c1427] mb-[25px] p-[20px] md:p-[25px] rounded-md">
-              <div className="trezo-card-header mb-[20px] md:mb-[25px] flex items-center justify-between">
-                <div className="trezo-card-title">
-                  <h5 className="!mb-0">تسجيل حساب جديد</h5>
+   <form onSubmit={handleSubmit(submit)}>
+  <div className="gap-6">
+    <div className="xl:col-span-3 2xl:col-span-2">
+      <div className="trezo-card bg-[#F7F7F7] dark:bg-[#0c1427] mb-6 p-6 rounded-xl shadow-md">
+        {/* العنوان */}
+        <div className="trezo-card-header mb-6 flex items-center justify-between border-b border-gray-200 dark:border-[#172036] pb-3">
+          <h5 className="!mb-0 text-lg font-bold text-[#011957] dark:text-white">
+            تسجيل حساب جديد
+          </h5>
+        </div>
+
+        {/* المحتوى */}
+        <div className="trezo-card-content">
+          <div className="sm:grid sm:grid-cols-2 sm:gap-6">
+            {/* Email */}
+            <div className="mb-5 sm:mb-0">
+              <label className="mb-2 block font-medium text-[#011957] dark:text-gray-200">
+                البريد الإلكتروني *
+              </label>
+              <input
+                type="email"
+                {...register("email")}
+                placeholder="example@email.com"
+                className="input-style"
+              />
+              {errors.email && (
+                <p className="text-[#E10E0E] text-sm mt-1">{errors.email.message}</p>
+              )}
+            </div>
+
+            {/* Password */}
+            <div className="mb-5 sm:mb-0">
+              <label className="mb-2 block font-medium text-[#011957] dark:text-gray-200">
+                كلمة المرور *
+              </label>
+              <input
+                type="password"
+                {...register("password")}
+                placeholder="••••••••"
+                className="input-style"
+              />
+              {errors.password && (
+                <p className="text-[#E10E0E] text-sm mt-1">{errors.password.message}</p>
+              )}
+            </div>
+
+            {/* Phone */}
+            <div className="mb-5 sm:mb-0">
+              <label className="mb-2 block font-medium text-[#011957] dark:text-gray-200">
+                رقم الهاتف *
+              </label>
+              <input
+                type="text"
+                {...register("phone")}
+                placeholder="+20 100 000 0000"
+                className="input-style"
+              />
+              {errors.phone && (
+                <p className="text-[#E10E0E] text-sm mt-1">{errors.phone.message}</p>
+              )}
+            </div>
+
+            {/* Full Name */}
+            <div className="mb-5 sm:mb-0">
+              <label className="mb-2 block font-medium text-[#011957] dark:text-gray-200">
+                الاسم الكامل *
+              </label>
+              <input
+                type="text"
+                {...register("full_name")}
+                placeholder="أدخل اسمك الكامل"
+                className="input-style"
+              />
+            </div>
+
+            {/* Job Title */}
+            <div className="mb-5 sm:mb-0">
+              <label className="mb-2 block font-medium text-[#011957] dark:text-gray-200">
+                الوظيفة
+              </label>
+              <input
+                type="text"
+                {...register("job_title")}
+                placeholder="مثال: مطور ويب"
+                className="input-style"
+              />
+            </div>
+
+            {/* Address */}
+            <div className="mb-5 sm:mb-0">
+              <label className="mb-2 block font-medium text-[#011957] dark:text-gray-200">
+                العنوان
+              </label>
+              <input
+                type="text"
+                {...register("address")}
+                placeholder="أدخل عنوانك"
+                className="input-style"
+              />
+            </div>
+
+            {/* About */}
+            <div className="sm:col-span-2 mb-5 sm:mb-0">
+              <label className="mb-2 block font-medium text-[#011957] dark:text-gray-200">
+                عنك
+              </label>
+              <textarea
+                {...register("about")}
+                placeholder="اكتب نبذة عن نفسك"
+                className="input-style h-[140px] p-4 resize-none"
+              ></textarea>
+            </div>
+
+            {/* Profile Picture */}
+            <div className="mb-5 sm:mb-0">
+              <label className="mb-2 block font-medium text-[#011957] dark:text-gray-200">
+                صورة الملف الشخصي
+              </label>
+              <div className="relative flex items-center justify-center overflow-hidden rounded-md py-12 px-5 border-2 border-dashed border-[#9861FB] hover:border-[#6043FD] transition cursor-pointer bg-white dark:bg-[#0c1427]">
+                <div className="flex flex-col items-center justify-center text-center">
+                  <i className="ri-upload-2-line text-2xl text-[#6043FD] mb-2"></i>
+                  <p className="leading-[1.5] text-sm text-[#011957] dark:text-gray-300">
+                    <strong className="text-[#6043FD]">انقر للتحميل</strong>
+                    <br /> ملفك هنا
+                  </p>
                 </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="absolute inset-0 z-[1] opacity-0 cursor-pointer"
+                  onChange={handleProfilePictureChange}
+                />
               </div>
-              <div className="trezo-card-content">
-                <div className="sm:grid sm:grid-cols-2 sm:gap-[25px]">
-                  {/* Email */}
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] block font-medium text-black dark:text-white">
-                      البريد الإلكتروني *
-                    </label>
-                    <input
-                      type="email"
-                      {...register("email")}
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all"
+
+              {profilePicture && (
+                <div className="mt-3">
+                  <div className="relative w-[80px] h-[80px]">
+                    <Image
+                      src={URL.createObjectURL(profilePicture)}
+                      alt="profile-preview"
+                      width={80}
+                      height={80}
+                      className="rounded-md"
                     />
-                    {errors.email && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.email.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Password */}
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] block font-medium text-black dark:text-white">
-                      كلمة المرور *
-                    </label>
-                    <input
-                      type="password"
-                      {...register("password")}
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all"
-                    />
-                    {errors.password && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.password.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Phone */}
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] block font-medium text-black dark:text-white">
-                      رقم الهاتف *
-                    </label>
-                    <input
-                      type="text"
-                      {...register("phone")}
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all"
-                    />
-                    {errors.phone && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.phone.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Optional Fields */}
-
-                  {/* Full Name */}
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] block font-medium text-black dark:text-white">
-                      الاسم الكامل *
-                    </label>
-                    <input
-                      type="text"
-                      {...register("full_name")}
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all"
-                    />
-                  </div>
-
-                  {/* Job Title */}
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] block font-medium text-black dark:text-white">
-                      الوظيفة
-                    </label>
-                    <input
-                      type="text"
-                      {...register("job_title")}
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all"
-                    />
-                  </div>
-
-                  {/* Address */}
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] block font-medium text-black dark:text-white">
-                      العنوان
-                    </label>
-                    <input
-                      type="text"
-                      {...register("address")}
-                      className="h-[55px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] px-[17px] block w-full outline-0 transition-all"
-                    />
-                  </div>
-
-                  {/* About */}
-                  <div className="sm:col-span-2 mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] block font-medium text-black dark:text-white">
-                      عنك
-                    </label>
-                    <textarea
-                      {...register("about")}
-                      className="h-[140px] rounded-md text-black dark:text-white border border-gray-200 dark:border-[#172036] bg-white dark:bg-[#0c1427] p-[17px] block w-full outline-0 transition-all"
-                    ></textarea>
-                  </div>
-
-                  {/* Profile Picture */}
-                  <div className="mb-[20px] sm:mb-0">
-                    <label className="mb-[10px] block font-medium text-black dark:text-white">
-                      صورة الملف الشخصي
-                    </label>
-                    <div className="relative flex items-center justify-center overflow-hidden rounded-md py-[88px] px-[20px] border border-gray-200 dark:border-[#172036]">
-                      <div className="flex items-center justify-center">
-                        <div className="w-[35px] h-[35px] border border-gray-100 dark:border-[#15203c] flex items-center justify-center rounded-md text-primary-500 text-lg ltr:mr-[12px] rtl:ml-[12px]">
-                          <i className="ri-upload-2-line"></i>
-                        </div>
-                        <p className="leading-[1.5]">
-                          <strong className="text-black dark:text-white">
-                            انقر للتحميل
-                          </strong>
-                          <br /> ملفك هنا
-                        </p>
-                      </div>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="absolute top-0 left-0 right-0 bottom-0 rounded-md z-[1] opacity-0 cursor-pointer"
-                        onChange={handleProfilePictureChange}
-                      />
-                    </div>
-
-                    {profilePicture && (
-                      <div className="mt-[10px]">
-                        <div className="relative w-[80px] h-[80px]">
-                          <Image
-                            src={URL.createObjectURL(profilePicture)}
-                            alt="profile-preview"
-                            width={80}
-                            height={80}
-                            className="rounded-md"
-                          />
-                          <button
-                            type="button"
-                            className="absolute top-[-5px] right-[-5px] bg-orange-500 text-white w-[20px] h-[20px] flex items-center justify-center rounded-full text-xs rtl:right-auto rtl:left-[-5px]"
-                            onClick={handleRemoveProfilePicture}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                    <button
+                      type="button"
+                      className="absolute top-[-5px] right-[-5px] bg-[#E10E0E] text-white w-[22px] h-[22px] flex items-center justify-center rounded-full text-xs"
+                      onClick={handleRemoveProfilePicture}
+                    >
+                      ✕
+                    </button>
                   </div>
                 </div>
-
-                <div className="mt-[20px] sm:mt-[25px]">
-                  <button
-                    type="submit"
-                    className="font-medium inline-block transition-all rounded-md 2xl:text-md py-[10px] md:py-[12px] px-[20px] md:px-[22px] bg-primary-500 text-white hover:bg-primary-400"
-                  >
-                    إنشاء حساب
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </div>
+
+          {/* زر الإنشاء */}
+          <div className="mt-6 sm:mt-8">
+            <button
+              type="submit"
+              className="font-medium inline-block rounded-md py-3 px-6 w-full sm:w-auto text-white bg-gradient-to-r from-[#6043FD] via-[#9861FB] to-[#BA6FEE] hover:opacity-90 transition-all"
+            >
+              إنشاء حساب
+            </button>
+          </div>
         </div>
-      </form>
+      </div>
+    </div>
+  </div>
+</form>
+
+
     </>
   );
 }
